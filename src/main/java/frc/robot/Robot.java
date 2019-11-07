@@ -13,8 +13,12 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.OI;
+
+import frc.robot.commands.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -33,6 +37,7 @@ public class Robot extends TimedRobot {
   private double previousYaw = 0;
 
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  public static final OI oi = new OI();
 
 
   public static WPI_TalonSRX rotatorTalon = new WPI_TalonSRX(1);
@@ -102,6 +107,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    Scheduler.getInstance().run();
+
   //  count ++;
     //if(count == 6){
 //      count = 0;
@@ -109,14 +116,14 @@ public class Robot extends TimedRobot {
     double thisYaw = table.getEntry("tapeYaw").getDouble(0.0);
 
     if(Math.abs(thisYaw) > 1 && tapeDetected/* && Math.abs(previousYaw - thisYaw) < 7*/){
-      Robot.rotatorTalon.set(ControlMode.PercentOutput, thisYaw > 0 ? 0.11f : -0.11f);
-      System.out.println(thisYaw > 0 ? 0.11f : -0.11f);
+      // Robot.rotatorTalon.set(ControlMode.PercentOutput, thisYaw > 0 ? 0.11f : -0.11f);
+      // System.out.println(thisYaw > 0 ? 0.11f : -0.11f);
       previousYaw = thisYaw;
 
-      System.out.println("thisYaw " + thisYaw + " tapeDetected " + tapeDetected);
+      // System.out.println("thisYaw " + thisYaw + " tapeDetected " + tapeDetected);
     }else{
-      System.out.println("Not getting any output " + Double.toString(thisYaw) + " " + tapeDetected);
-      Robot.rotatorTalon.set(ControlMode.PercentOutput, 0f);
+      // System.out.println("Not getting any output " + Double.toString(thisYaw) + " " + tapeDetected);
+      // Robot.rotatorTalon.set(ControlMode.PercentOutput, 0f);
     }
   //}
   }
@@ -136,5 +143,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    
+    System.out.println("Button1: " + Boolean.toString(OI.getButton1Pressed()) + " : " + Boolean.toString(OI.getButton1Pressed()));
   }
 }
