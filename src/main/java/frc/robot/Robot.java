@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
-    Robot.rotatorTalon.set(ControlMode.PercentOutput, .1f);
+    Robot.rotatorTalon.set(ControlMode.PercentOutput, -.11f);
   }
 
   /**
@@ -109,11 +109,14 @@ public class Robot extends TimedRobot {
     double thisYaw = table.getEntry("tapeYaw").getDouble(0.0);
 
     if(Math.abs(thisYaw) > 1 && tapeDetected/* && Math.abs(previousYaw - thisYaw) < 7*/){
-Robot.rotatorTalon.set(ControlMode.PercentOutput, thisYaw > 0 ? 0.1f : -0.1f);
-System.out.println(thisYaw > 0 ? 0.1f : -0.1f);
-previousYaw = thisYaw;
+      Robot.rotatorTalon.set(ControlMode.PercentOutput, thisYaw > 0 ? 0.11f : -0.11f);
+      System.out.println(thisYaw > 0 ? 0.11f : -0.11f);
+      previousYaw = thisYaw;
 
-System.out.println("thisYaw " + thisYaw + " tapeDetected " + tapeDetected);
+      System.out.println("thisYaw " + thisYaw + " tapeDetected " + tapeDetected);
+    }else{
+      System.out.println("Not getting any output " + Double.toString(thisYaw) + " " + tapeDetected);
+      Robot.rotatorTalon.set(ControlMode.PercentOutput, 0f);
     }
   //}
   }
