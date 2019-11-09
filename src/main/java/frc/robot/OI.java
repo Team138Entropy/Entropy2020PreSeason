@@ -6,13 +6,16 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.*;
 
 public final class OI {
+    static Config cfg = new Config();
+    MoveTurret forward;
+    MoveTurret backward;
 
     public static class CustomController extends Joystick {
 
         // Buttons
-        public static final int button1 = 1;
-        public static final int button2 = 2;
-        public static final int button3 = 3;
+        public static final int turnTurretForward = cfg.getInt("control.turnTurretForward");
+        public static final int turnTurretBackward = cfg.getInt("control.turnTurretBackward");
+        public static final int visionEnabled = cfg.getInt("control.visionEnabled");
         public static final int button4 = 4;
         public static final int button5 = 5;
         public static final int button6 = 6;
@@ -35,9 +38,9 @@ public final class OI {
     // controller port is 0
     public static Joystick customController = new Joystick(0);
 
-    static Button button1 = new JoystickButton(customController, CustomController.button1);
-    static Button button2 = new JoystickButton(customController, CustomController.button2);
-    static Button button3 = new JoystickButton(customController, CustomController.button3);
+    static Button turnTurretForward = new JoystickButton(customController, CustomController.turnTurretForward);
+    static Button turnTurretBackward = new JoystickButton(customController, CustomController.turnTurretBackward);
+    static Button visionToggle = new JoystickButton(customController, CustomController.visionEnabled);
     static Button button4 = new JoystickButton(customController, CustomController.button4);
     static Button button5 = new JoystickButton(customController, CustomController.button5);
     static Button button6 = new JoystickButton(customController, CustomController.button6);
@@ -48,15 +51,15 @@ public final class OI {
 	// 	double moveSpeed = driverStick.getRawAxis(XboxController.leftYAxis);
 
     public OI(){
-        button1.whileHeld(new MoveTurret(true));
+        forward = new MoveTurret(true);
+        backward = new MoveTurret(false);
+        turnTurretForward.whileHeld(forward);
+        turnTurretBackward.whileHeld(backward);
+
     }
     
-    public static boolean getButton1Pressed(){
-        return OI.customController.getRawButtonPressed(OI.CustomController.button1);
-    }
-    
-    public static boolean getButton1(){
-        return OI.customController.getRawButton(OI.CustomController.button1);
+    public static boolean getVisionEnabled(){
+        return OI.customController.getRawButton(OI.CustomController.visionEnabled);
     }
     
 	// public static double getMoveSpeed()

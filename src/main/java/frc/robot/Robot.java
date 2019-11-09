@@ -7,11 +7,17 @@
 
 package frc.robot;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -35,6 +41,8 @@ public class Robot extends TimedRobot {
 
   private double count = 0;
   private double previousYaw = 0;
+
+  static Logger visionLogger = new Logger("visionLogger");
 
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public static final OI oi = new OI();
@@ -108,28 +116,34 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+    if(OI.getVisionEnabled()){
+      oi.forward.cancel();
+      oi.backward.cancel();
+      count ++;
+      if(count == 6){
+        count = 0;
+        boolean tapeDetected = table.getEntry("tapeDetected").getBoolean(false);
+        double thisYaw = table.getEntry("tapeYaw").getDouble(0.0);
 
-  //  count ++;
-    //if(count == 6){
-//      count = 0;
-    boolean tapeDetected = table.getEntry("tapeDetected").getBoolean(false);
-    double thisYaw = table.getEntry("tapeYaw").getDouble(0.0);
+        if(Math.abs(thisYaw) > 1 && tapeDetected/* && Math.abs(previousYaw - thisYaw) < 7*/){
+          Robot.rotatorTalon.set(ControlMode.PercentOutput, thisYaw > 0 ? 0.11f : -0.11f);
+          System.out.println(thisYaw > 0 ? 0.11f : -0.11f);
+          previousYaw = thisYaw;
 
-    if(Math.abs(thisYaw) > 1 && tapeDetected/* && Math.abs(previousYaw - thisYaw) < 7*/){
-      // Robot.rotatorTalon.set(ControlMode.PercentOutput, thisYaw > 0 ? 0.11f : -0.11f);
-      // System.out.println(thisYaw > 0 ? 0.11f : -0.11f);
-      previousYaw = thisYaw;
-
-      // System.out.println("thisYaw " + thisYaw + " tapeDetected " + tapeDetected);
-    }else{
-      // System.out.println("Not getting any output " + Double.toString(thisYaw) + " " + tapeDetected);
-      // Robot.rotatorTalon.set(ControlMode.PercentOutput, 0f);
+          visionLogger.log("thisYaw " + thisYaw + " tapeDetected " + tapeDetected);
+        }else{
+          visionLogger.log("Not getting any output " + Double.toString(thisYaw) + " " + tapeDetected);
+          Robot.rotatorTalon.set(ControlMode.PercentOutput, 0f);
+        }
+      }
     }
-  //}
   }
 
   @Override
   public void teleopInit() {
+    OI.cfg.reload();
+
+
     System.out.println("teleopInit just happened");
     // TestCommandG testCommand = new TestCommandG();
 
@@ -143,7 +157,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    
-    System.out.println("Button1: " + Boolean.toString(OI.getButton1Pressed()) + " : " + Boolean.toString(OI.getButton1Pressed()));
+    System.out.println("Button1: " + Boolean.toString(OI.getVisionEnabled()));
   }
 }
