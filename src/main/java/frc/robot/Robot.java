@@ -1,9 +1,5 @@
 package frc.robot;
 
-import java.util.concurrent.CompletableFuture;
-
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -26,7 +22,6 @@ public class Robot extends TimedRobot {
     public static final ShuffleboardHandler shuffHandler = new ShuffleboardHandler();
 
     // Subsystems
-    private static final Compressor compressor = new Compressor();
     public static final Drivetrain drivetrain = new Drivetrain();
     //public static final DriverVision driverVision = new DriverVision();
 
@@ -45,7 +40,6 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         //VisionThread.getInstance().start();
     	drivetrain.DriveTrainInit();
-    	compressor.start();	
         Robot.accumulatedHeading = 0;
         Constants.practiceBot = isPracticeRobot();
 

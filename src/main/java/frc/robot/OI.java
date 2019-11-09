@@ -1,11 +1,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.*;
 
 import frc.robot.Constants;
-import frc.robot.events.EventWatcherThread;
-import frc.robot.commands.*;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -79,24 +76,9 @@ public final class OI {
     static double lastX = 0;
     static double LastY = 0;
 
-	static Button homeElevatorButton = new JoystickButton(operatorStick, NykoController.middle11);
-	static Button elevateToLevel1    = new JoystickButton(operatorStick, NykoController.button1);
-	static Button elevateToLevel2    = new JoystickButton(operatorStick, NykoController.button2);
-    static Button elevateToLevel3    = new JoystickButton(operatorStick, NykoController.button4);
-    
-	static Button pistonTestButton   = new JoystickButton(operatorStick, NykoController.middle9);
-	static Button cargoRotateTestButton   = new JoystickButton(operatorStick, NykoController.middle10);
-	static Button climbPistonButton  = new JoystickButton(driverStick, XboxController.rightBumper);
-	static Button defaultPositions   = new JoystickButton(operatorStick, NykoController.button3);
-
-	static Button acquireButton = new JoystickButton(operatorStick, NykoController.leftTrigger);
-	static Button deployButton = new JoystickButton(operatorStick, NykoController.rightTrigger);
-
-	static Button acquireCargoButton = new JoystickButton(operatorStick, NykoController.leftBumper);
-	static Button deployCargoButton = new JoystickButton(operatorStick, NykoController.rightBumper);
-
     public OI(){
-	}
+
+    }
     
 	public static double getMoveSpeed()
 	{
@@ -141,6 +123,6 @@ public final class OI {
     public static boolean isQuickturn() {
         return driverStick.getRawAxis(XboxController.leftTriggerAxis) > Constants.highSpeedModeTriggerThreshold;
     }
-    
+
 } // :D)))
 
