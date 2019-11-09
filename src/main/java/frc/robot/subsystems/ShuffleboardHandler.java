@@ -7,18 +7,22 @@ import frc.robot.Robot;
 
 public class ShuffleboardHandler extends Subsystem {
 
-    private NetworkTableEntry rollerSpeedDouble;
-    private NetworkTableEntry pistonRotateEnabled;
+    //private NetworkTableEntry highWheelNonLinearity; unused because of no FREAKING TRANSMISSION
+    private NetworkTableEntry lowWheelNonLinearity;
 
     public void initDefaultCommand() {
 
     }
 
     public void init() {
-        pistonRotateEnabled = Robot.main.add("Piston Rotate Enabled", true).getEntry();
+        lowWheelNonLinearity = Robot.main.add("Wheel Non Linearity Factor", Constants.LowWheelNonLinearity).getEntry();
     }
 
     public void execute() {
         
+    }
+
+    public double getLowWheelNonLinearity() {
+        return lowWheelNonLinearity.getDouble(Constants.LowWheelNonLinearity);
     }
 }

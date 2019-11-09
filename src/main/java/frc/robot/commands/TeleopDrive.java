@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.CheesyDrive;
 import frc.robot.OI;
 import frc.robot.Robot;
+import frc.robot.subsystems.ShuffleboardHandler;
 
 public class TeleopDrive extends Command {
 
@@ -22,6 +23,8 @@ public class TeleopDrive extends Command {
 		double moveSpeed,rotateSpeed;
 		moveSpeed=OI.getMoveSpeed();
 		rotateSpeed=OI.getRotateSpeed();
+
+		ourDrive.setLowWheelNonLinearity(Robot.shuffHandler.getLowWheelNonLinearity());
 
 		Robot.drivetrain.drive(ourDrive.cheesyDrive(moveSpeed, rotateSpeed, OI.isQuickturn(), OI.isFullSpeed()));
 	}

@@ -18,7 +18,7 @@ public class CheesyDrive {
     /** @see <a href="https://www.desmos.com/calculator/hshfsz5we0">Math on Desmos</a>*/
     private static final double kHighWheelNonLinearity = 0.65;
     /** @see <a href="https://www.desmos.com/calculator/hshfsz5we0">Math on Desmos</a>*/
-    private static final double kLowWheelNonLinearity = 0.5;
+    private double kLowWheelNonLinearity = 0.5;
 
     private static final double kHighNegInertiaScalar = 4.0;
 
@@ -47,6 +47,11 @@ public class CheesyDrive {
      * @return
      * @see <a href="https://www.desmos.com/calculator/hshfsz5we0">Math on Desmos</a>
      */
+
+    public void setLowWheelNonLinearity(double set) {
+        kLowWheelNonLinearity = set;
+    }
+
     public DriveSignal cheesyDrive(double throttle, double wheel, boolean isQuickTurn, boolean isHighGear) {
 
         wheel = handleDeadband(wheel, kWheelDeadband);
