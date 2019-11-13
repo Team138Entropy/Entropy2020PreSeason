@@ -22,8 +22,8 @@ import java.util.List;
  * @example Logger myLogger = new Logger("myLogger");
  * 
  *          // if log.myLogger is INFO or lower, this prints to STDOUT
- *          [myLogger:INFO] Hello from myLogger! myLogger.log("Hello from
- *          myLogger!");
+ *          // [myLogger:INFO] Hello from myLogger!
+ *          myLogger.log("Hello from myLogger!");
  * 
  *          // prints to STDERR [myLogger:ERR] Error from myLogger!
  *          myLogger.err("Error from myLogger!");
