@@ -4,18 +4,38 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - TestMech",
+      "request": "launch",
+      "mainClass": "frc.robot.mecanum.TestMech",
+      "projectName": "Entropy2020PreSeason"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - MechStick",
+      "request": "launch",
+      "mainClass": "frc.robot.mecanum.MechStick",
+      "projectName": "Entropy2020PreSeason"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - MechStick",
+      "request": "launch",
+      "mainClass": "frc.MechStick",
+      "projectName": "Entropy2020PreSeason"
+    },
     {
       "type": "wpilib",
       "name": "WPILib Desktop Debug",
       "request": "launch",
-      "desktop": true,
+      "desktop": true
     },
     {
       "type": "wpilib",
       "name": "WPILib roboRIO Debug",
       "request": "launch",
-      "desktop": false,
+      "desktop": false
     }
   ]
 }
