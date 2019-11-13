@@ -7,17 +7,11 @@
 
 package frc.robot;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -25,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.OI;
 
 import frc.robot.commands.*;
-
+ 
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -42,7 +36,8 @@ public class Robot extends TimedRobot {
   private double count = 0;
   private double previousYaw = 0;
 
-  static Logger visionLogger = new Logger("visionLogger");
+  static Logger visionLogger = new Logger("vision");
+  static Logger robotLogger = new Logger("robot");
 
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public static final OI oi = new OI();
@@ -56,6 +51,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    OI.cfg.reload();
+    robotLogger.log("ROBOT INIT");
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -88,9 +85,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    OI.cfg.reload();
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+    robotLogger.log("AUTONOMOUS INIT: " + m_autoSelected);
     Robot.rotatorTalon.set(ControlMode.PercentOutput, -.11f);
   }
 
@@ -111,6 +109,19 @@ public class Robot extends TimedRobot {
   }
 
   /**
+   * This function is called when teleop is selected.
+   */
+  @Override
+  public void teleopInit() {
+    OI.cfg.reload();
+
+    robotLogger.log("TELEOP INIT");
+
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    table = inst.getTable("SmartDashboard");
+  }
+
+  /**
    * This function is called periodically during operator control.
    */
   @Override
@@ -127,29 +138,26 @@ public class Robot extends TimedRobot {
 
         if(Math.abs(thisYaw) > 1 && tapeDetected/* && Math.abs(previousYaw - thisYaw) < 7*/){
           Robot.rotatorTalon.set(ControlMode.PercentOutput, thisYaw > 0 ? 0.11f : -0.11f);
-          System.out.println(thisYaw > 0 ? 0.11f : -0.11f);
+          visionLogger.debug(Float.toString(thisYaw > 0 ? 0.11f : -0.11f));
           previousYaw = thisYaw;
 
-          visionLogger.log("thisYaw " + thisYaw + " tapeDetected " + tapeDetected);
+          visionLogger.verbose("thisYaw " + thisYaw + " tapeDetected " + tapeDetected);
         }else{
-          visionLogger.log("Not getting any output " + Double.toString(thisYaw) + " " + tapeDetected);
+          visionLogger.debug("Not getting any output " + Double.toString(thisYaw) + " " + tapeDetected);
           Robot.rotatorTalon.set(ControlMode.PercentOutput, 0f);
         }
       }
     }
   }
 
+  /**
+   * This function is called when test mode is selected.
+   */
   @Override
-  public void teleopInit() {
+  public void testInit() {
     OI.cfg.reload();
 
-
-    System.out.println("teleopInit just happened");
-    // TestCommandG testCommand = new TestCommandG();
-
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    table = inst.getTable("SmartDashboard");
-    System.out.println("TestCommand just ran");
+    robotLogger.log("TEST INIT");
   }
 
   /**
@@ -157,6 +165,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    System.out.println("Button1: " + Boolean.toString(OI.getVisionEnabled()));
+    robotLogger.verbose("Button1: " + Boolean.toString(OI.getVisionEnabled()));
   }
 }

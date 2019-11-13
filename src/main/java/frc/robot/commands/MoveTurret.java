@@ -18,20 +18,20 @@ public class MoveTurret extends Command {
   public MoveTurret(boolean forwards) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    logger.log("MoveTurret: " + forwards);
+    logger.verbose("MoveTurret: " + forwards);
     this.forwards = forwards;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    logger.log("MoveTurret init: " + forwards);
+    logger.verbose("MoveTurret init: " + forwards);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    logger.log("Moving MoveTurret: " + forwards);
+    logger.verbose("Moving MoveTurret: " + forwards);
     Robot.rotatorTalon.set(ControlMode.PercentOutput, this.forwards ? 0.11f : -0.11f);
   }
 
@@ -44,7 +44,7 @@ public class MoveTurret extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    logger.log("Ending MoveTurret " + forwards);
+    logger.verbose("Ending MoveTurret " + forwards);
     Robot.rotatorTalon.set(ControlMode.PercentOutput, 0f);
   }
 
@@ -53,7 +53,7 @@ public class MoveTurret extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    logger.log("Interrupting MoveTurret " + forwards);
+    logger.verbose("Interrupting MoveTurret " + forwards);
     Robot.rotatorTalon.set(ControlMode.PercentOutput, 0f);
   }
 }

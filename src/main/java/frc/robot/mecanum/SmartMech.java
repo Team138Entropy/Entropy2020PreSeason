@@ -45,7 +45,6 @@ public class SmartMech implements MechControl {
         //TODO: We don't use 100% of our power when both sticks are pushed forwards.
         
         float[][] driveValues = {{0, 0}, {0, 0}};
-        // System.out.println(Arrays.deepToString(driveValues));
 
         // ## FORWARD DRIVE ##
         // add the values for the forwards drive controls
