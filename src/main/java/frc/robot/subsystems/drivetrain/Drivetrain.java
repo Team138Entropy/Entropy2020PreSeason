@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.drivetrain;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -10,16 +10,15 @@ import frc.robot.*;
 import frc.robot.commands.TeleopDrive;
 
 public class Drivetrain extends Subsystem {
-	public double lastSpeed = 0;
-	double _speedFactor = Constants.FullSpeed;
-	double _rotateFactor = 1;
-	
+	private double lastSpeed = 0;
+	private double _speedFactor = Constants.FullSpeed;
+	private double _rotateFactor = 1;
 
 	// Servo Loop Gains
-	double Drive_Kf = 1.7;
-	double Drive_Kp = 5;
-	double Drive_Ki = 0.02; //
-	double Drive_Kd = 30;
+	private static final double Drive_Kf = 1.7;
+	private static final double Drive_Kp = 5;
+	private static final double Drive_Ki = 0.02; //
+	private static final double Drive_Kd = 30;
 
 	// Filter state for joystick movements
 	double _lastMoveSpeed = 0;
@@ -32,15 +31,24 @@ public class Drivetrain extends Subsystem {
 	public WPI_TalonSRX frontRightTalon = new WPI_TalonSRX(RobotMap.RIGHT_MOTOR_CHANNEL_FRONT);
 	public WPI_TalonSRX backRightTalon  = new WPI_TalonSRX(RobotMap.RIGHT_MOTOR_CHANNEL_BACK);
 
+	private DriveEngine driveEngine;
+
+	public DriveEngine getDriveEngine() {
+		return driveEngine;
+	}
+
+	public void setDriveEngine(DriveEngine driveEngine) {
+		this.driveEngine = driveEngine;
+	}
+
 	protected void initDefaultCommand() {
 		setDefaultCommand(new TeleopDrive());
 	}
 
-
-	public void DriveTrainInit()
-	{
+	// NOTE: Look at turning this into a constructor
+	public void init() {
 		/* choose the sensor and sensor direction */
-		backLeftTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0,0);
+		configFeedbackSensor(backLeftTalon);
 		backLeftTalon.setSensorPhase(true);
 
 		/* set the peak and nominal outputs, 12V means full */
@@ -51,8 +59,7 @@ public class Drivetrain extends Subsystem {
 		backLeftTalon.setNeutralMode(NeutralMode.Brake);
 		frontLeftTalon.setNeutralMode(NeutralMode.Brake);
 
-		/* choose thebttomnsor and sensor direction */
-		backRightTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0,0);
+		configFeedbackSensor(backRightTalon);
 		backRightTalon.setSensorPhase(true);
 		backRightTalon.configNominalOutputForward(0.,0);
 		backRightTalon.configNominalOutputReverse(-0.,0);
@@ -75,13 +82,10 @@ public class Drivetrain extends Subsystem {
 		frontLeftTalon.follow(backLeftTalon);
 		frontRightTalon.follow(backRightTalon);
 	}
-    
-	public void drive(DriveSignal signal)
-    {	
-		driveCheezy(signal);
-    }
 
-    public void driveCheezy(DriveSignal signal) {
+    public void drive() {
+		DriveSignal signal = driveEngine.drive();
+
         backLeftTalon.set(ControlMode.PercentOutput, signal.getLeft() * _speedFactor * -1);
 		backRightTalon.set(ControlMode.PercentOutput, signal.getRight() * _speedFactor);
     }
@@ -95,6 +99,10 @@ public class Drivetrain extends Subsystem {
 
 	public void setDriveSpeed(double newDriveSpeed){
 		_speedFactor = newDriveSpeed;
+	}
+
+	private void configFeedbackSensor(WPI_TalonSRX talon) {
+		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0,0);
 	}
 
 }

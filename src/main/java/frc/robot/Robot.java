@@ -7,6 +7,8 @@ import frc.robot.events.EventWatcherThread;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.drivetrain.StickDrive;
 
 /**
  * This is the development branch.
@@ -19,7 +21,6 @@ import frc.robot.subsystems.*;
 public class Robot extends TimedRobot {
 	// Interface with players
     public static final ShuffleboardTab main = Shuffleboard.getTab("SmartDashboard");
-    public static final ShuffleboardHandler shuffHandler = new ShuffleboardHandler();
 
     // Subsystems
     public static final Drivetrain drivetrain = new Drivetrain();
@@ -39,12 +40,12 @@ public class Robot extends TimedRobot {
      */
     public void robotInit() {
         //VisionThread.getInstance().start();
-    	drivetrain.DriveTrainInit();
+        drivetrain.setDriveEngine(new StickDrive(OI.leftDriveStick, OI.rightDriveStick));
+    	drivetrain.init();
         Robot.accumulatedHeading = 0;
         Constants.practiceBot = isPracticeRobot();
 
         EventWatcherThread.getInstance().start();
-        shuffHandler.init();
 
         DashboardThread.getInstance().start();
     }
