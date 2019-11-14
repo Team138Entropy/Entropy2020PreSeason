@@ -29,10 +29,6 @@ public class Constants {
 	// 2019 Drive Train constants
 	public final static double FullSpeed = 0.75;
 	public final static double ClimbSpeed = 0.75;
-
-	// Controller stuff
-	public static final int nykoControllerPort = 0;
-    public static final int xboxControllerPort = 1;
 	
 	// Dashboard
 	public static final long DASHBOARD_INTERVAL = 50; // In milliseconds

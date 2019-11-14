@@ -74,8 +74,8 @@ public final class OI {
         }
     }
 
-    public static Joystick driverStick = new Joystick(Constants.xboxControllerPort);
-    public static Joystick operatorStick = new Joystick(Constants.nykoControllerPort);
+    public static Joystick driverStick = new Joystick(cfg.getInt("oi.control.xboxControllerPort"));
+    public static Joystick operatorStick = new Joystick(cfg.getInt("oi.control.nykoControllerPort"));
 
     static double lastX = 0;
     static double LastY = 0;
