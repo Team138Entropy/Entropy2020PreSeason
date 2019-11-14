@@ -3,6 +3,7 @@ package frc.robot;
  * Constant values used throughout robot code.
  * In "C" this would be a header file, but alas, this is Java
  */
+@Deprecated
 public class Constants {
 
 	// System Constants
