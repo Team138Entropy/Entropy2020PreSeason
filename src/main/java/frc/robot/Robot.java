@@ -34,6 +34,9 @@ public class Robot extends TimedRobot {
     public static final OI oi = new OI();
     Preferences prefs = Preferences.getInstance();
 
+    
+    static Logger robotLogger = new Logger("robot");
+
     // Global constants
     private static String mode; // "auto" or "teleop"
     public static String gameData;
@@ -43,6 +46,10 @@ public class Robot extends TimedRobot {
      * used for any initialization code.
      */
     public void robotInit() {
+        OI.cfg.reload();
+
+
+        robotLogger.log("ROBOT INIT");
         //VisionThread.getInstance().start();
     	drivetrain.DriveTrainInit();
     	compressor.start();	
@@ -61,7 +68,7 @@ public class Robot extends TimedRobot {
      * the robot is disabled.
      */
     public void disabledInit() {
-
+        OI.cfg.reload();
     }
 
     public void disabledPeriodic() {
@@ -78,7 +85,8 @@ public class Robot extends TimedRobot {
      * or additional comparisons to the switch structure below with additional strings & commands.
      */
     public void autonomousInit() {
-
+        OI.cfg.reload();
+        robotLogger.log("AUTONOMOUS INIT");
     }
 
     /**
@@ -89,6 +97,9 @@ public class Robot extends TimedRobot {
     }
 
     public void teleopInit() {
+        OI.cfg.reload();
+
+        robotLogger.log("TELEOP INIT");
         mode = "teleop";
         //Sensors.resetEncoders();
         Sensors.gyro.reset();
@@ -99,16 +110,23 @@ public class Robot extends TimedRobot {
         //Constants.IntegralError = 0;
     }
 
-    private static boolean isPracticeRobot() {
-        return (!Sensors.practiceRobotJumperPin.get());
-    }
-
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
 //		LiveWindow.run();
+    }
+
+    private static boolean isPracticeRobot() {
+        return (!Sensors.practiceRobotJumperPin.get());
+    }
+
+    @Override
+    public void testInit(){
+        OI.cfg.reload();
+        
+        robotLogger.log("TEST INIT");
     }
 
     /**

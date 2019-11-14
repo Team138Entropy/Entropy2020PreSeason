@@ -12,6 +12,7 @@ import frc.robot.commands.*;
  * interface to the commands and command groups that allow control of the robot.
  */
 public final class OI {
+    static Config cfg = new Config();
 
     public static class NykoController extends Joystick {
 
