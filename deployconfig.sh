@@ -1,2 +1,2 @@
 #!/bin/sh
-scp src/main/deploy/config.properties admin@169.254.172.208:/home/lvuser/deploy/config.properties
+scp src/main/deploy/config.properties admin@10.1.38.28:/home/lvuser/deploy/config.properties
