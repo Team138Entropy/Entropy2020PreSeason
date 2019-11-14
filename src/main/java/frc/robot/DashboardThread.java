@@ -6,6 +6,8 @@ import static frc.robot.Robot.*;
  * Singleton thread for updating the SmartDashboard on an interval of {@value Constants#DASHBOARD_INTERVAL} milliseconds.
  */
 public class DashboardThread extends Thread {
+    static Logger dashLogger = new Logger("dashboardThread");
+
     private static DashboardThread thread = new DashboardThread();
 
     public static DashboardThread getInstance() {
@@ -16,11 +18,11 @@ public class DashboardThread extends Thread {
     public void run() {
         while (true) {
             Sensors.updateSmartDashboard();
-            
+            dashLogger.debug("updating smart dashboard");
             try {
                 Thread.sleep(OI.cfg.getInt("dashboardInterval"));
             } catch (InterruptedException e) {
-                System.out.println("Warning: Dashboard thread interrupted, dashboard values will not be correct");
+                dashLogger.warn("Dashboard thread interrupted, dashboard values will not be correct");
                 e.printStackTrace();
             }
         }
