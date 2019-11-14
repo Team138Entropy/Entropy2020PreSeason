@@ -26,7 +26,7 @@ public class Config {
     /**
      * Reads the configuration file.
      */
-    Config(){
+    public Config(){
         reload();
     }
 
@@ -35,7 +35,7 @@ public class Config {
      * Run it after changing the file's contents.
      * It will run when the constructor is initalized (no need to manually run it the first time).
      */
-    void reload(){
+    public void reload(){
         try (InputStream input = new FileInputStream(Filesystem.getDeployDirectory() + "/config.properties")){
             prop = new Properties();
 
@@ -52,11 +52,11 @@ public class Config {
      * @param key The name of the property. It should be camelCase and use periods for depth, eg. user.name
      * @return The value of the property as a String.
      */
-    String getProp(String key){
+    public String getProp(String key){
         return prop.getProperty(key);
     }
     
-    String getString(String key){
+    public String getString(String key){
         return getProp(key);
     }
 
@@ -66,7 +66,7 @@ public class Config {
      * @param key The name of the property. It should be camelCase and use periods for depth, eg. user.name
      * @return The value of the property casted to a float.
      */
-    float getFloat(String key){
+    public float getFloat(String key){
         return Float.parseFloat(getProp(key));
     }
 
@@ -76,7 +76,7 @@ public class Config {
      * @param key The name of the property. It should be camelCase and use periods for depth, eg. user.name
      * @return The value of the property casted to an int.
      */
-    int getInt(String key){
+    public int getInt(String key){
         return Integer.parseInt(getProp(key));
     }
 
@@ -86,7 +86,17 @@ public class Config {
      * @param key The name of the property. It should be camelCase and use periods for depth, eg. user.name
      * @return The value of the property casted to a boolean.
      */
-    boolean getBoolean(String key) {
+    public boolean getBoolean(String key) {
         return Boolean.parseBoolean(getProp(key));
+    }
+
+
+    /**
+     * 
+     * @param key The name of the property. It should be camelCase and use periods for depth, eg. user.name
+     * @return The value of the property casted to a double.
+     */
+    public double getDouble(String key) {
+        return Double.parseDouble(getProp(key));
     }
 }

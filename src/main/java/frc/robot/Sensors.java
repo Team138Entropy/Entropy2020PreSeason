@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Sensors {
-	public static ADXRS450_Gyro gyro; 
+	public static ADXRS450_Gyro gyro;
+	final static double metersPerPulse = Math.PI*6*.0254*15/45/256;
 	
     static Joystick driverStick = new Joystick(0);
 	
@@ -32,12 +33,12 @@ public class Sensors {
 
 	public static double getLeftDistance() {
 		// In METERS
-		return -Robot.drivetrain.bottomLeftTalon.getSelectedSensorPosition(0) * Constants.MetersPerPulse;
+		return -Robot.drivetrain.bottomLeftTalon.getSelectedSensorPosition(0) * metersPerPulse;
 	}
 
 	public static double getRightDistance() {
 		// In METERS
-		return -Robot.drivetrain.bottomRightTalon.getSelectedSensorPosition(0) * Constants.MetersPerPulse;
+		return -Robot.drivetrain.bottomRightTalon.getSelectedSensorPosition(0) * metersPerPulse;
 	}
 
 	public static void resetEncoders() {

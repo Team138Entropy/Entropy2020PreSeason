@@ -11,7 +11,7 @@ import frc.robot.commands.TeleopDrive;
 
 public class Drivetrain extends Subsystem {
 	public double lastSpeed = 0;
-	double _speedFactor = Constants.FullSpeed;
+	double _speedFactor = OI.cfg.getDouble("oi.drive.fullSpeed");
 	double _rotateFactor = 1;
 	
 

@@ -18,7 +18,7 @@ public class DashboardThread extends Thread {
             Sensors.updateSmartDashboard();
             
             try {
-                Thread.sleep(Constants.DASHBOARD_INTERVAL);
+                Thread.sleep(OI.cfg.getInt("dashboardInterval"));
             } catch (InterruptedException e) {
                 System.out.println("Warning: Dashboard thread interrupted, dashboard values will not be correct");
                 e.printStackTrace();

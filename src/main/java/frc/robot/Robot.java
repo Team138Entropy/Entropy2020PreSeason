@@ -54,7 +54,8 @@ public class Robot extends TimedRobot {
     	drivetrain.DriveTrainInit();
     	compressor.start();	
         Robot.accumulatedHeading = 0;
-        Constants.practiceBot = isPracticeRobot();
+        //TODO: why is this commented out???
+        // Constants.practiceBot = isPracticeRobot();
 
         EventWatcherThread.getInstance().start();
         shuffHandler.init();

@@ -3,7 +3,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.*;
 
-import frc.robot.Constants;
 import frc.robot.events.EventWatcherThread;
 import frc.robot.commands.*;
 
@@ -12,7 +11,8 @@ import frc.robot.commands.*;
  * interface to the commands and command groups that allow control of the robot.
  */
 public final class OI {
-    static Config cfg = new Config();
+    public static Config cfg = new Config();
+    static float closeLoopJoystickDeadband = cfg.getFloat("oi.control.closeLoopJoystickDeadband");
 
     public static class NykoController extends Joystick {
 
@@ -106,7 +106,7 @@ public final class OI {
 		// Apply thresholds to joystick positions to eliminate
 		// creep motion due to non-zero joystick value when joysticks are 
 		// "centered"
-		if (Math.abs(moveSpeed) < Constants.CloseLoopJoystickDeadband)
+		if (Math.abs(moveSpeed) < closeLoopJoystickDeadband)
 			moveSpeed=0;
 		return moveSpeed;
 	}
@@ -115,14 +115,14 @@ public final class OI {
 	{
         double rotateSpeed;
         
-        if (Constants.practiceBot) {
+        if (OI.cfg.getBoolean("practiceBot")) {
             rotateSpeed = driverStick.getRawAxis(XboxController.rightXAxis);
         }
         else {
             rotateSpeed = -1 * driverStick.getRawAxis(XboxController.rightXAxis);
         }
         
-		if (Math.abs(rotateSpeed) < Constants.CloseLoopJoystickDeadband)
+		if (Math.abs(rotateSpeed) < closeLoopJoystickDeadband)
 			rotateSpeed=0;
 		return rotateSpeed;
 	}
@@ -140,7 +140,7 @@ public final class OI {
     }
 
     public static boolean isQuickturn() {
-        return driverStick.getRawAxis(XboxController.leftTriggerAxis) > Constants.highSpeedModeTriggerThreshold;
+        return driverStick.getRawAxis(XboxController.leftTriggerAxis) > cfg.getFloat("oi.drive.highSpeedModeTriggerThreshold");
     }
     
 } // :D)))
