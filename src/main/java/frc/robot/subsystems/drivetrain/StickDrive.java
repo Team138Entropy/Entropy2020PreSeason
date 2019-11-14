@@ -12,6 +12,13 @@ public class StickDrive implements DriveEngine {
     }
 
     public DriveSignal drive() {
-        return new DriveSignal(leftStick.getRawAxis(FlightStick.yAxis), rightStick.getRawAxis(FlightStick.yAxis));
+        return new DriveSignal(
+            scaleInput(leftStick.getRawAxis(FlightStick.yAxis)),
+            scaleInput(rightStick.getRawAxis(FlightStick.yAxis))
+        );
+    }
+
+    private static double scaleInput(double input) {
+        return (2 * Math.asin(input)) / (Math.PI);
     }
 }
