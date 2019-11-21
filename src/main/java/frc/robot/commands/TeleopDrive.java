@@ -17,7 +17,7 @@ public class TeleopDrive extends Command {
 	}
 
 	protected void initialize() {
-		teleopLogger.silly("");
+		teleopLogger.silly("TELEOP DRIVE TIME");
 	//	Sensors.resetEncoders();
 	}
 
