@@ -7,11 +7,12 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.*;
+import frc.robot.Config.Key;
 import frc.robot.commands.TeleopDrive;
 
 public class Drivetrain extends Subsystem {
 	public double lastSpeed = 0;
-	double _speedFactor = OI.cfg.getDouble("oi.drive.fullSpeed");
+	double _speedFactor = Config.getInstance().getDouble(Key.OI__DRIVE__FULLSPEED);
 	double _rotateFactor = 1;
 	
 

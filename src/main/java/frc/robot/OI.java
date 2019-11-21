@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.*;
 
 import frc.robot.events.EventWatcherThread;
+import frc.robot.Config.Key;
 import frc.robot.commands.*;
 
 /**
@@ -11,8 +12,7 @@ import frc.robot.commands.*;
  * interface to the commands and command groups that allow control of the robot.
  */
 public final class OI {
-    public static Config cfg = new Config();
-    static float closeLoopJoystickDeadband = cfg.getFloat("oi.control.closeLoopJoystickDeadband");
+    static float closeLoopJoystickDeadband = Config.getInstance().getFloat(Key.OI__CONTROL__CLOSED_LOOP_JOYSTICK_DEADBAND);
 
     public static class NykoController extends Joystick {
 
@@ -74,8 +74,8 @@ public final class OI {
         }
     }
 
-    public static Joystick driverStick = new Joystick(cfg.getInt("oi.control.xboxControllerPort"));
-    public static Joystick operatorStick = new Joystick(cfg.getInt("oi.control.nykoControllerPort"));
+    public static Joystick driverStick = new Joystick(Config.getInstance().getInt(Key.OI__CONTROL__XBOX_CONTROLLER_PORT));
+    public static Joystick operatorStick = new Joystick(Config.getInstance().getInt(Key.OI__CONTROL__NYKO_CONTROLLER_PORT));
 
     static double lastX = 0;
     static double LastY = 0;
@@ -115,7 +115,7 @@ public final class OI {
 	{
         double rotateSpeed;
         
-        if (OI.cfg.getBoolean("practiceBot")) {
+        if (Sensors.isPracticeBot()) {
             rotateSpeed = driverStick.getRawAxis(XboxController.rightXAxis);
         }
         else {
@@ -140,7 +140,7 @@ public final class OI {
     }
 
     public static boolean isQuickturn() {
-        return driverStick.getRawAxis(XboxController.leftTriggerAxis) > cfg.getFloat("oi.drive.highSpeedModeTriggerThreshold");
+        return driverStick.getRawAxis(XboxController.leftTriggerAxis) > Config.getInstance().getFloat(Key.OI__DRIVE__HIGH_SPEED_MODE_TRIGGER_THRESHOLD);
     }
     
 } // :D)))

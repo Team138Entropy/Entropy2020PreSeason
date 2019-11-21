@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Sensors {
 	public static ADXRS450_Gyro gyro;
+	
+	// This is our encoder constant for distance (in METERS) per encoder pulse
+	// 6" Wheels, 15:45 chain drive; 256 encoder counts per drive sprocket rotation
 	final static double metersPerPulse = Math.PI*6*.0254*15/45/256;
 	
     static Joystick driverStick = new Joystick(0);

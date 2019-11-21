@@ -52,8 +52,8 @@ public class Logger {
      * @param message The message to log
      */
     public void logLevel(String level, String message){
-        List levels = Arrays.asList(supportedLevels);
-        String minLevel = OI.cfg.getString("log." + logPath);
+        List<String> levels = Arrays.asList(supportedLevels);
+        String minLevel = Config.getInstance().cfg.getString("log__" + logPath.toUpperCase());
 
         // if logging is enabled at all for this logger,
         // and the level is recognized,

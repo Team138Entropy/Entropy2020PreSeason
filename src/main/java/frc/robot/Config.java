@@ -1,95 +1,86 @@
 package frc.robot;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
-import edu.wpi.first.wpilibj.Filesystem;
-
-/**
- * This is a class that lets us configure settings using a java .properties,
- * keeping them in source control but also allows changes to be deployed without having to do a full code build & deploy.
- * Use deployconfig.bat, deployconfig.ps1, or deployconfig.sh to deploy configuration file changes to a connected robot.
- * This class should only be instantiated once.
+/*
+ * Constant values used throughout robot code.
+ * In "C" this would be a header file, but alas, this is Java
  */
-public class Config {
-    Properties prop;
+// @Deprecated
+// public class Constants {
 
-    /**
-     * Reads the configuration file.
-     */
-    public Config(){
-        reload();
-    }
+	// System Constants
+	// public static double commandLoopIterationSeconds = 0.020;
+		
+	// public static boolean practiceBot = false;
 
-    /**
-     * Reloads the configuration file.
-     * Run it after changing the file's contents.
-     * It will run when the constructor is initalized (no need to manually run it the first time).
-     */
-    public void reload(){
-        try (InputStream input = new FileInputStream(Filesystem.getDeployDirectory() + "/config.properties")){
-            prop = new Properties();
+	// public final static double CloseLoopJoystickDeadband = 0.2;
+	
+	// This is our encoder constant for distance (in METERS) per  encoder pulse
+	// 6" Wheels, 15:45 chain drive; 256 encoder counts per drive sprocket rotation
+	// public final static double MetersPerPulse = Math.PI*6*.0254*15/45/256;
+	// public final static double SecondsTo100Milliseconds = 0.1;
 
-            // load the properties file
-            prop.load(input);
+	// Stuff that was deleted that I had to paste back in from the 2018 code
+	// public final static int zeroDelay= 60; // Approx 40/sec;
+	// public final static double highSpeedModeTriggerThreshold = 0.3;
 
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+	// TEST ONLY
+	// public final static int LeftDriveEncoderPolarity = -1;
+	// public final static int RightDriveEncoderPolarity = 1;
+	
+	// 2019 Drive Train constants
+	// public final static double FullSpeed = 0.75;
+	// public final static double ClimbSpeed = 0.75;
+	
+	// Dashboard
+	// public static final long DASHBOARD_INTERVAL = 50; // In milliseconds
+// }
 
-    /**
-     * 
-     * @param key The name of the property. It should be camelCase and use periods for depth, eg. user.name
-     * @return The value of the property as a String.
-     */
-    public String getProp(String key){
-        return prop.getProperty(key);
-    }
-    
-    public String getString(String key){
-        return getProp(key);
-    }
+public class Config{
+	public enum Key{
+		OI__CONTROL__XBOX_CONTROLLER_PORT,
+		OI__CONTROL__NYKO_CONTROLLER_PORT,
+		OI__CONTROL__CLOSED_LOOP_JOYSTICK_DEADBAND,
+	
+		OI__DRIVE__HIGH_SPEED_MODE_TRIGGER_THRESHOLD,
+		OI__DRIVE__FULLSPEED,
+		OI__DRIVE__CLIMBSPEED,
+	
+		DASHBOARD_INTERVAL
+	}
 
+	static Config instance;
+	public ConfigFile cfg;
+	private Config(){
+		this.cfg = new ConfigFile();
+	}
 
-    /**
-     * 
-     * @param key The name of the property. It should be camelCase and use periods for depth, eg. user.name
-     * @return The value of the property casted to a float.
-     */
-    public float getFloat(String key){
-        return Float.parseFloat(getProp(key));
-    }
+	public void reload(){
+		this.cfg.reload();
+	}
 
+	public static Config getInstance(){
+		if(instance == null){
+			instance = new Config();
+		}
+		return instance;
+	}
 
-    /**
-     * 
-     * @param key The name of the property. It should be camelCase and use periods for depth, eg. user.name
-     * @return The value of the property casted to an int.
-     */
-    public int getInt(String key){
-        return Integer.parseInt(getProp(key));
-    }
+	public String getString(Key key){
+		return cfg.getString(key.name());
+	}
 
+	public float getFloat(Key key){
+		return cfg.getFloat(key.name());
+	}
 
-    /**
-     * 
-     * @param key The name of the property. It should be camelCase and use periods for depth, eg. user.name
-     * @return The value of the property casted to a boolean.
-     */
-    public boolean getBoolean(String key) {
-        return Boolean.parseBoolean(getProp(key));
-    }
+	public double getDouble(Key key){
+		return cfg.getDouble(key.name());
+	}
 
+	public int getInt(Key key){
+		return cfg.getInt(key.name());
+	}
 
-    /**
-     * 
-     * @param key The name of the property. It should be camelCase and use periods for depth, eg. user.name
-     * @return The value of the property casted to a double.
-     */
-    public double getDouble(String key) {
-        return Double.parseDouble(getProp(key));
-    }
+	public boolean getBoolean(Key key){
+		return cfg.getBoolean(key.name());
+	}
 }

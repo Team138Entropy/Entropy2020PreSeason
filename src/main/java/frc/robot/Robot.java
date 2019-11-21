@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-        OI.cfg.reload();
+        Config.getInstance().reload();
 
 
         robotLogger.log("ROBOT INIT");
@@ -69,7 +69,7 @@ public class Robot extends TimedRobot {
      * the robot is disabled.
      */
     public void disabledInit() {
-        OI.cfg.reload();
+        Config.getInstance().reload();
     }
 
     public void disabledPeriodic() {
@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
      * or additional comparisons to the switch structure below with additional strings & commands.
      */
     public void autonomousInit() {
-        OI.cfg.reload();
+        Config.getInstance().reload();
         robotLogger.log("AUTONOMOUS INIT");
     }
 
@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
     }
 
     public void teleopInit() {
-        OI.cfg.reload();
+        Config.getInstance().reload();
 
         robotLogger.log("TELEOP INIT");
         mode = "teleop";
@@ -125,7 +125,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit(){
-        OI.cfg.reload();
+        Config.getInstance().reload();
         
         robotLogger.log("TEST INIT");
     }
