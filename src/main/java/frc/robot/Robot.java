@@ -151,9 +151,12 @@ public class Robot extends TimedRobot {
                     initialYaw = thisYaw;
                 }
 
-                thisYaw = thisYaw - initialYaw;
+                // thisYaw = thisYaw - initialYaw;
+                //70 is the maximum, -70 is the minimum
 
-                if(Math.abs(thisYaw) > 1 && tapeDetected/* && Math.abs(previousYaw - thisYaw) < 7*/){
+                //7 is our "deadband"
+                //TODO: add to config
+                if(Math.abs(thisYaw) > 7 && tapeDetected/* && Math.abs(previousYaw - thisYaw) < 7*/){
                     float direction = thisYaw < 0 ? 0.11f : -0.11f;
                     Robot.rotatorTalon.set(ControlMode.PercentOutput, direction);
                     visionLogger.debug(Float.toString(direction));
