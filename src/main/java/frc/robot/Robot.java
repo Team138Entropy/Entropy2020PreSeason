@@ -2,11 +2,17 @@ package frc.robot;
 
 import java.util.concurrent.CompletableFuture;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import frc.robot.Config.Key;
 import frc.robot.events.EventWatcherThread;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -27,15 +33,24 @@ public class Robot extends TimedRobot {
 
     // Subsystems
     private static final Compressor compressor = new Compressor();
-    public static final Drivetrain drivetrain = new Drivetrain();
+    // public static final Drivetrain drivetrain = new Drivetrain();
     //public static final DriverVision driverVision = new DriverVision();
 
     private static double accumulatedHeading = 0.0; // Accumulate heading angle (target)
     public static final OI oi = new OI();
     Preferences prefs = Preferences.getInstance();
 
+    private NetworkTable table;
+
+    private double count = 0;
+    private double previousYaw = 0;
+
+    private double initialYaw = 0.0;
     
     static Logger robotLogger = new Logger("robot");
+    static Logger visionLogger = new Logger("vision");
+    
+    public static WPI_TalonSRX rotatorTalon = new WPI_TalonSRX(1);
 
     // Global constants
     private static String mode; // "auto" or "teleop"
@@ -47,11 +62,12 @@ public class Robot extends TimedRobot {
      */
     public void robotInit() {
         Config.getInstance().reload();
+        rotatorTalon.set(ControlMode.PercentOutput, 0f);
 
 
         robotLogger.log("ROBOT INIT");
         //VisionThread.getInstance().start();
-    	drivetrain.DriveTrainInit();
+    	// drivetrain.DriveTrainInit();
     	compressor.start();	
         Robot.accumulatedHeading = 0;
         //TODO: why is this commented out???
@@ -101,11 +117,15 @@ public class Robot extends TimedRobot {
         Config.getInstance().reload();
 
         robotLogger.log("TELEOP INIT");
+
+        NetworkTableInstance inst = NetworkTableInstance.getDefault();
+        table = inst.getTable("SmartDashboard");
+        
         mode = "teleop";
         //Sensors.resetEncoders();
-        Sensors.gyro.reset();
+        // Sensors.gyro.reset();
         Robot.accumulatedHeading = 0;
-        Robot.drivetrain.Relax();
+        // Robot.drivetrain.Relax();
 
         //Constants.AutoEnable = true;
         //Constants.IntegralError = 0;
@@ -116,7 +136,36 @@ public class Robot extends TimedRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-//		LiveWindow.run();
+//		LiveWindow.run();Scheduler.getInstance().run();
+        if(Config.getInstance().getBoolean(Key.OI__VISION__ENABLED)){
+            oi.forward.cancel();
+            oi.backward.cancel();
+            count ++;
+            if(count == 6){
+                count = 0;
+
+                boolean tapeDetected = table.getEntry("tapeDetected").getBoolean(false);
+                double thisYaw = table.getEntry("tapeYaw").getDouble(0.0);
+
+                if(initialYaw == 0){
+                    initialYaw = thisYaw;
+                }
+
+                thisYaw = thisYaw - initialYaw;
+
+                if(Math.abs(thisYaw) > 1 && tapeDetected/* && Math.abs(previousYaw - thisYaw) < 7*/){
+                    float direction = thisYaw < 0 ? 0.11f : -0.11f;
+                    Robot.rotatorTalon.set(ControlMode.PercentOutput, direction);
+                    visionLogger.debug(Float.toString(direction));
+                    previousYaw = thisYaw;
+        
+                    visionLogger.verbose("thisYaw " + thisYaw + " tapeDetected " + tapeDetected);
+                }else{
+                    visionLogger.debug("Not getting any output " + Double.toString(thisYaw) + " " + tapeDetected);
+                    Robot.rotatorTalon.set(ControlMode.PercentOutput, 0f);
+                }
+            }
+        } 
     }
 
     private static boolean isPracticeRobot() {

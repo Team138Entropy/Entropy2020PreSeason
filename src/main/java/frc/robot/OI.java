@@ -12,6 +12,8 @@ import frc.robot.commands.*;
  * interface to the commands and command groups that allow control of the robot.
  */
 public final class OI {
+    MoveTurret forward;
+    MoveTurret backward;
     static float closeLoopJoystickDeadband = Config.getInstance().getFloat(Key.OI__CONTROL__CLOSED_LOOP_JOYSTICK_DEADBAND);
 
     public static class NykoController extends Joystick {
@@ -97,6 +99,8 @@ public final class OI {
 	static Button deployCargoButton = new JoystickButton(operatorStick, NykoController.rightBumper);
 
     public OI(){
+        forward = new MoveTurret(true);
+        backward = new MoveTurret(false);
 	}
     
 	public static double getMoveSpeed()

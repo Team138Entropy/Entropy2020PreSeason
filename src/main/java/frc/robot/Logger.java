@@ -53,7 +53,7 @@ public class Logger {
      */
     public void logLevel(String level, String message){
         List<String> levels = Arrays.asList(supportedLevels);
-        String minLevel = Config.getInstance().cfg.getString("log__" + logPath.toUpperCase());
+        String minLevel = Config.getInstance().cfg.getString("LOG__" + logPath.toUpperCase());
 
         // if logging is enabled at all for this logger,
         // and the level is recognized,

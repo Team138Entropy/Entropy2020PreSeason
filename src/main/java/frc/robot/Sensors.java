@@ -28,26 +28,26 @@ public class Sensors {
 	public static boolean isCargoDetectionEnabled = false;
 	
 	static {
-		Robot.drivetrain.bottomLeftTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-		Robot.drivetrain.bottomRightTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		// Robot.drivetrain.bottomLeftTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		// Robot.drivetrain.bottomRightTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 	   
 		practiceRobotJumperPin = new DigitalInput(RobotMap.PRACTICE_ROBOT_JUMPER);
 	}
 
-	public static double getLeftDistance() {
-		// In METERS
-		return -Robot.drivetrain.bottomLeftTalon.getSelectedSensorPosition(0) * metersPerPulse;
-	}
+	// public static double getLeftDistance() {
+	// 	// In METERS
+	// 	// return -Robot.drivetrain.bottomLeftTalon.getSelectedSensorPosition(0) * metersPerPulse;
+	// }
 
-	public static double getRightDistance() {
-		// In METERS
-		return -Robot.drivetrain.bottomRightTalon.getSelectedSensorPosition(0) * metersPerPulse;
-	}
+	// public static double getRightDistance() {
+	// 	// In METERS
+	// 	// return -Robot.drivetrain.bottomRightTalon.getSelectedSensorPosition(0) * metersPerPulse;
+	// }
 
-	public static void resetEncoders() {
-		Robot.drivetrain.bottomLeftTalon.setSelectedSensorPosition(0, 0, 0);
-		Robot.drivetrain.bottomRightTalon.setSelectedSensorPosition(0, 0, 0);
-	}
+	// public static void resetEncoders() {
+	// 	// Robot.drivetrain.bottomLeftTalon.setSelectedSensorPosition(0, 0, 0);
+	// 	// Robot.drivetrain.bottomRightTalon.setSelectedSensorPosition(0, 0, 0);
+	// }
 
 	public static void updateSmartDashboard() {
 		SmartDashboard.putBoolean("Practice Bot", isPracticeBot());
@@ -63,10 +63,10 @@ public class Sensors {
 
 		double totalCurrent = 0;
 
-		totalCurrent += Robot.drivetrain.bottomLeftTalon.getOutputCurrent();
-		totalCurrent += Robot.drivetrain.bottomRightTalon.getOutputCurrent();
-		totalCurrent += Robot.drivetrain.topLeftTalon.getOutputCurrent();
-		totalCurrent += Robot.drivetrain.topRightTalon.getOutputCurrent();
+		// totalCurrent += Robot.drivetrain.bottomLeftTalon.getOutputCurrent();
+		// totalCurrent += Robot.drivetrain.bottomRightTalon.getOutputCurrent();
+		// totalCurrent += Robot.drivetrain.topLeftTalon.getOutputCurrent();
+		// totalCurrent += Robot.drivetrain.topRightTalon.getOutputCurrent();
 
 		SmartDashboard.putNumber("MOTOR Current", totalCurrent);
 	 }
