@@ -3,7 +3,6 @@ package frc.robot;
 import java.util.Optional;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.*;
 
 import frc.robot.Constants;
 
@@ -130,13 +129,19 @@ public final class OI {
 
     private OI() {
         Joystick port0 = new Joystick(0);
-        System.out.println("HELLO");
-        System.out.println(port0.getType());
-
-        // Temporary, until we know the HID types of the controllers we're actually using
-        driveInterface = DriveInterface.STICK;
-        leftDriveStick = Optional.of(port0);
-        rightDriveStick = Optional.of(new Joystick(1));
+        switch (port0.getType()) {
+            case kHIDJoystick:
+                driveInterface = DriveInterface.STICK;
+                leftDriveStick = Optional.of(port0);
+                rightDriveStick = Optional.of(new Joystick(Constants.rightFlightStickPort));
+                break;
+            case kHIDGamepad:
+                driveInterface = DriveInterface.CLASSIC;
+                driverStick = Optional.of(port0);
+                break;
+            default:
+                throw new RuntimeException("Controller on port 0 did not report a supported HID type");
+        }
     }
 
     /*
