@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.Optional;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.*;
 
@@ -10,6 +12,20 @@ import frc.robot.Constants;
  * interface to the commands and command groups that allow control of the robot.
  */
 public final class OI {
+
+    private static OI instance;
+
+    public static OI getInstance() {
+        if (instance == null) instance = new OI();
+        return instance;
+    }
+
+    public static enum DriveInterface {
+        CLASSIC, STICK
+    }
+
+    private DriveInterface driveInterface;
+    public DriveInterface getDriveInterface() { return driveInterface; }
 
     public static class NykoController extends Joystick {
         // Buttons
@@ -103,15 +119,36 @@ public final class OI {
         }
     }
 
+    // Flight stick controls
+    public Optional<FlightStick> leftDriveStick = Optional.empty(), rightDriveStick = Optional.empty();
+    
+    // Classic controls
+    public Optional<XboxController> driverStick = Optional.empty();
+
+    // Nyko controller; this doesn't care about which driver control scheme we're using
+    public NykoController operatorStick = new NykoController(Constants.nykoControllerPort);
+
+    private OI() {
+        Joystick port0 = new Joystick(0);
+        System.out.println(port0.getType());
+
+        // Temporary, until we know the HID types of the controllers we're actually using
+        driveInterface = DriveInterface.STICK;
+        leftDriveStick = Optional.of((FlightStick) port0);
+        rightDriveStick = Optional.of(new FlightStick(1));
+    }
+
+    /*
+    // Flight stick controls
     public static FlightStick leftDriveStick = new FlightStick(Constants.leftFlightStickPort);
     public static FlightStick rightDriveStick = new FlightStick(Constants.rightFlightStickPort);
+
+    // Classic controls
+    public static Joystick driverStick = new Joystick(Constants.xboxControllerPort);
     public static NykoController operatorStick = new NykoController(Constants.nykoControllerPort);
+    */
 
     static double lastX = 0;
     static double LastY = 0;
 
-    // Buttons are private because we should only use them once to map them to commands.
-    // Driver
-    private static Button climbPistonButton  = new JoystickButton(rightDriveStick, FlightStick.topMiddle);
 } // :D)))
-

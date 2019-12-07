@@ -26,11 +26,15 @@ public class Constants {
 	public final static double FullSpeed = 0.75;
 	public final static double ClimbSpeed = 0.75;
 
-	// Controller stuff
-	public static final int nykoControllerPort = 0;
-	public static final int xboxControllerPort = 1;
-	public static final int leftFlightStickPort = 2;
-	public static final int rightFlightStickPort = 3;
+	/* Controllers
+	The driver ports overlap so we don't have to change ports when changing control schemes.
+	There is an auto-detection mechanism that determines which control scheme to use
+	based on the reported HID type of the controller on port 0.
+	*/
+	public static final int xboxControllerPort = 0;
+	public static final int leftFlightStickPort = 0;
+	public static final int rightFlightStickPort = 1;
+	public static final int nykoControllerPort = 2;
 
 	// Stuff that was deleted that I had to paste back in from the 2018 code
 	public final static int zeroDelay= 60; // Approx 40/sec;

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.drivetrain.StickDrive;
+import frc.robot.subsystems.drivetrain.CheesyDrive;
 
 /**
  * This is the development branch.
@@ -26,7 +27,6 @@ public class Robot extends TimedRobot {
     //public static final DriverVision driverVision = new DriverVision();
 
     private static double accumulatedHeading = 0.0; // Accumulate heading angle (target)
-    public static final OI oi = new OI();
     Preferences prefs = Preferences.getInstance();
 
     // Global constants
@@ -39,7 +39,14 @@ public class Robot extends TimedRobot {
      */
     public void robotInit() {
         //VisionThread.getInstance().start();
-        drivetrain.setDriveEngine(new StickDrive(OI.leftDriveStick, OI.rightDriveStick));
+        switch (OI.getInstance().getDriveInterface()) {
+            case CLASSIC:
+                drivetrain.setDriveEngine(new CheesyDrive());
+                break;
+            case STICK:
+                drivetrain.setDriveEngine(new StickDrive(OI.getInstance().leftDriveStick.get(), OI.getInstance().rightDriveStick.get()));
+                break;
+        }
     	drivetrain.init();
         Robot.accumulatedHeading = 0;
         Constants.practiceBot = isPracticeRobot();
