@@ -34,6 +34,9 @@ public class Robot extends TimedRobot {
     public static final OI oi = new OI();
     Preferences prefs = Preferences.getInstance();
 
+    
+    static Logger robotLogger = new Logger("robot");
+
     // Global constants
     private static String mode; // "auto" or "teleop"
     public static String gameData;
@@ -43,11 +46,16 @@ public class Robot extends TimedRobot {
      * used for any initialization code.
      */
     public void robotInit() {
+        Config.getInstance().reload();
+
+
+        robotLogger.log("ROBOT INIT");
         //VisionThread.getInstance().start();
     	drivetrain.DriveTrainInit();
     	compressor.start();	
         Robot.accumulatedHeading = 0;
-        Constants.practiceBot = isPracticeRobot();
+        //TODO: why is this commented out???
+        // Constants.practiceBot = isPracticeRobot();
 
         EventWatcherThread.getInstance().start();
         shuffHandler.init();
@@ -61,7 +69,7 @@ public class Robot extends TimedRobot {
      * the robot is disabled.
      */
     public void disabledInit() {
-
+        Config.getInstance().reload();
     }
 
     public void disabledPeriodic() {
@@ -78,7 +86,8 @@ public class Robot extends TimedRobot {
      * or additional comparisons to the switch structure below with additional strings & commands.
      */
     public void autonomousInit() {
-
+        Config.getInstance().reload();
+        robotLogger.log("AUTONOMOUS INIT");
     }
 
     /**
@@ -89,6 +98,9 @@ public class Robot extends TimedRobot {
     }
 
     public void teleopInit() {
+        Config.getInstance().reload();
+
+        robotLogger.log("TELEOP INIT");
         mode = "teleop";
         //Sensors.resetEncoders();
         Sensors.gyro.reset();
@@ -99,16 +111,23 @@ public class Robot extends TimedRobot {
         //Constants.IntegralError = 0;
     }
 
-    private static boolean isPracticeRobot() {
-        return (!Sensors.practiceRobotJumperPin.get());
-    }
-
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
 //		LiveWindow.run();
+    }
+
+    private static boolean isPracticeRobot() {
+        return (!Sensors.practiceRobotJumperPin.get());
+    }
+
+    @Override
+    public void testInit(){
+        Config.getInstance().reload();
+        
+        robotLogger.log("TEST INIT");
     }
 
     /**

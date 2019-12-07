@@ -3,8 +3,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.*;
 
-import frc.robot.Constants;
 import frc.robot.events.EventWatcherThread;
+import frc.robot.Config.Key;
 import frc.robot.commands.*;
 
 /**
@@ -12,6 +12,7 @@ import frc.robot.commands.*;
  * interface to the commands and command groups that allow control of the robot.
  */
 public final class OI {
+    static float closeLoopJoystickDeadband = Config.getInstance().getFloat(Key.OI__CONTROL__CLOSED_LOOP_JOYSTICK_DEADBAND);
 
     public static class NykoController extends Joystick {
 
@@ -73,8 +74,8 @@ public final class OI {
         }
     }
 
-    public static Joystick driverStick = new Joystick(Constants.xboxControllerPort);
-    public static Joystick operatorStick = new Joystick(Constants.nykoControllerPort);
+    public static Joystick driverStick = new Joystick(Config.getInstance().getInt(Key.OI__CONTROL__XBOX_CONTROLLER_PORT));
+    public static Joystick operatorStick = new Joystick(Config.getInstance().getInt(Key.OI__CONTROL__NYKO_CONTROLLER_PORT));
 
     static double lastX = 0;
     static double LastY = 0;
@@ -105,7 +106,7 @@ public final class OI {
 		// Apply thresholds to joystick positions to eliminate
 		// creep motion due to non-zero joystick value when joysticks are 
 		// "centered"
-		if (Math.abs(moveSpeed) < Constants.CloseLoopJoystickDeadband)
+		if (Math.abs(moveSpeed) < closeLoopJoystickDeadband)
 			moveSpeed=0;
 		return moveSpeed;
 	}
@@ -114,14 +115,14 @@ public final class OI {
 	{
         double rotateSpeed;
         
-        if (Constants.practiceBot) {
+        if (Sensors.isPracticeBot()) {
             rotateSpeed = driverStick.getRawAxis(XboxController.rightXAxis);
         }
         else {
             rotateSpeed = -1 * driverStick.getRawAxis(XboxController.rightXAxis);
         }
         
-		if (Math.abs(rotateSpeed) < Constants.CloseLoopJoystickDeadband)
+		if (Math.abs(rotateSpeed) < closeLoopJoystickDeadband)
 			rotateSpeed=0;
 		return rotateSpeed;
 	}
@@ -139,7 +140,7 @@ public final class OI {
     }
 
     public static boolean isQuickturn() {
-        return driverStick.getRawAxis(XboxController.leftTriggerAxis) > Constants.highSpeedModeTriggerThreshold;
+        return driverStick.getRawAxis(XboxController.leftTriggerAxis) > Config.getInstance().getFloat(Key.OI__DRIVE__HIGH_SPEED_MODE_TRIGGER_THRESHOLD);
     }
     
 } // :D)))

@@ -1,6 +1,7 @@
 package frc.robot.events;
 
 import edu.wpi.first.wpilibj.command.Scheduler;
+import frc.robot.Logger;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -9,6 +10,7 @@ import java.util.LinkedHashMap;
  * Singleton thread for monitoring things.
  */
 public class EventWatcherThread extends Thread {
+    static Logger eventThreadLogger = new Logger("eventWatcherThread");
 
     private ArrayList<Event> queue = new ArrayList<>();
     private LinkedHashMap<Event, Boolean> lastStateCache = new LinkedHashMap<>();
@@ -47,7 +49,9 @@ public class EventWatcherThread extends Thread {
     public void addEvent(Event e) {
         if (!queue.contains(e)) {
             queue.add(e);
-            System.out.println("Event added (" + queue.size() + " total)");
+            eventThreadLogger.warn("Event added (" + queue.size() + " total)");
+        }else{
+            eventThreadLogger.debug("Que already contains an event, not adding it...");
         }
     }
 }
