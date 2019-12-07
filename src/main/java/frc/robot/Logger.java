@@ -25,7 +25,14 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class Logger {
     // our supported logging levels, most important first
-    public static final String[] supportedLevels = {"ERROR", "WARN", "INFO", "VERBOSE", "DEBUG", "SILLY"};
+    public enum SupportedLevels{
+        ERROR,
+        WARN,
+        INFO,
+        VERBOSE,
+        DEBUG,
+        SILLY
+    };
 
     String logPath;
     /**
@@ -44,8 +51,8 @@ public class Logger {
      * @param message
      * @return
      */
-    public static String getLogMsg(String logPath, String thisLogLevel, String message){
-        return "[" + logPath + ":" + thisLogLevel + "] " + message;
+    public static String getLogMsg(String logPath, SupportedLevels thisLogLevel, String message){
+        return "[" + logPath + ":" + thisLogLevel.name() + "] " + message;
     }
 
     /**
@@ -53,19 +60,18 @@ public class Logger {
      * @param level The level to log to
      * @param message The message to log
      */
-    public void logLevel(String level, String message){
-        List<String> levels = Arrays.asList(supportedLevels);
+    public void logLevel(SupportedLevels level, String message){
         String minLevel = Config.getInstance().cfg.getString("LOG__" + logPath.toUpperCase());
 
         // if logging is enabled at all for this logger,
         // and the level is recognized,
         // and our level is higher-up or equal to the minimum specified,
         // then log it
-        if(minLevel != null && minLevel != "OFF" && levels.contains(level) && levels.indexOf(level) <= levels.indexOf(minLevel)){
+        if(minLevel != null && minLevel != "OFF" && Arrays.asList(SupportedLevels.values()).indexOf(level) <= Arrays.asList(SupportedLevels.values()).indexOf(SupportedLevels.valueOf(minLevel))){
             // if the level we're logging at is WARN or ERR, then log to STDERR, otherwise log to STDOUT
-            if(level == "ERROR"){
+            if(level == SupportedLevels.ERROR){
                 DriverStation.reportError(getLogMsg(logPath, level, message), Thread.currentThread().getStackTrace());
-            }else if(level == "WARN"){
+            }else if(level == SupportedLevels.WARN){
                 DriverStation.reportWarning(getLogMsg(logPath, level, message), Thread.currentThread().getStackTrace());
             }else{
                 System.out.println(getLogMsg(logPath, level, message));
@@ -78,7 +84,7 @@ public class Logger {
      * @param message The message to log
      */
     public void err(String message){
-        logLevel("ERROR", message);
+        logLevel(SupportedLevels.ERROR, message);
     }
     
     /**
@@ -86,7 +92,7 @@ public class Logger {
      * @param message The message to log
      */
     public void error(String message){
-        logLevel("ERROR", message);
+        logLevel(SupportedLevels.ERROR, message);
     }
     
     /**
@@ -94,7 +100,7 @@ public class Logger {
      * @param message The message to log
      */
     public void warn(String message){
-        logLevel("WARN", message);
+        logLevel(SupportedLevels.WARN, message);
     }
 
     /**
@@ -102,7 +108,7 @@ public class Logger {
      * @param message The message to log
      */
     public void log(String message){
-        logLevel("INFO", message);
+        logLevel(SupportedLevels.INFO, message);
     }
 
     /**
@@ -110,7 +116,7 @@ public class Logger {
      * @param message The message to log
      */
     public void info(String message){
-        logLevel("INFO", message);
+        logLevel(SupportedLevels.INFO, message);
     }
 
     /**
@@ -118,7 +124,7 @@ public class Logger {
      * @param message The message to log
      */
     public void debug(String message){
-        logLevel("DEBUG", message);
+        logLevel(SupportedLevels.DEBUG, message);
     }
 
     /**
@@ -126,7 +132,7 @@ public class Logger {
      * @param message The message to log
      */
     public void verbose(String message){
-        logLevel("VERBOSE", message);
+        logLevel(SupportedLevels.VERBOSE, message);
     }
 
     /**
@@ -134,6 +140,6 @@ public class Logger {
      * @param message The message to log
      */
     public void silly(String message){
-        logLevel("SILLY", message);
+        logLevel(SupportedLevels.SILLY, message);
     }
 }
