@@ -15,7 +15,7 @@ public class ShuffleboardHandler extends Subsystem {
     }
 
     public void init() {
-        lowWheelNonLinearity = Robot.main.add("Wheel Non Linearity Factor", Constants.LowWheelNonLinearity).getEntry();
+        //lowWheelNonLinearity = Robot.main.add("Wheel Non Linearity Factor", Constants.LowWheelNonLinearity).getEntry();
     }
 
     public void execute() {
