@@ -6,7 +6,9 @@ package frc.robot;
 // @Deprecated
 // public class Constants {
 
-	// System Constants
+import edu.wpi.first.wpilibj.DriverStation;
+
+// System Constants
 	// public static double commandLoopIterationSeconds = 0.020;
 		
 	// public static boolean practiceBot = false;
@@ -57,6 +59,16 @@ public class Config{
 
 	public void reload(){
 		this.cfg.reload();
+
+        // double-check that each key is there
+        for(Key key : Key.values()){
+			try{
+				Config.getInstance().getString(key);
+			}catch(RuntimeException e){
+				DriverStation.reportError("Didn't find key " + key.name() + " in the configuration file. Did you forget to add it?", e.getStackTrace());
+				throw new Error("Didn't find key " + key.name() + " in the configuration file. Did you forget to add it?");
+			}
+        }
 	}
 
 	public static Config getInstance(){
