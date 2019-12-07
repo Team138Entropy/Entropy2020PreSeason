@@ -1,12 +1,13 @@
 package frc.robot.subsystems.drivetrain;
 
+import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.DriveSignal;
 import frc.robot.OI.FlightStick;
 
 public class StickDrive implements DriveEngine {
-    private FlightStick leftStick, rightStick;
+    private Joystick leftStick, rightStick;
 
-    public StickDrive(FlightStick leftStick, FlightStick rightStick) {
+    public StickDrive(Joystick leftStick, Joystick rightStick) {
         this.leftStick = leftStick;
         this.rightStick = rightStick;
     }

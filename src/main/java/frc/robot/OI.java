@@ -120,22 +120,23 @@ public final class OI {
     }
 
     // Flight stick controls
-    public Optional<FlightStick> leftDriveStick = Optional.empty(), rightDriveStick = Optional.empty();
+    public Optional<Joystick> leftDriveStick = Optional.empty(), rightDriveStick = Optional.empty();
     
     // Classic controls
-    public Optional<XboxController> driverStick = Optional.empty();
+    public Optional<Joystick> driverStick = Optional.empty();
 
     // Nyko controller; this doesn't care about which driver control scheme we're using
     public NykoController operatorStick = new NykoController(Constants.nykoControllerPort);
 
     private OI() {
         Joystick port0 = new Joystick(0);
+        System.out.println("HELLO");
         System.out.println(port0.getType());
 
         // Temporary, until we know the HID types of the controllers we're actually using
         driveInterface = DriveInterface.STICK;
-        leftDriveStick = Optional.of((FlightStick) port0);
-        rightDriveStick = Optional.of(new FlightStick(1));
+        leftDriveStick = Optional.of(port0);
+        rightDriveStick = Optional.of(new Joystick(1));
     }
 
     /*
