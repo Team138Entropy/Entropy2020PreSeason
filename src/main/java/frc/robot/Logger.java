@@ -3,6 +3,8 @@ package frc.robot;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * The Logger class lets you log messages and only have them show up if a config
  * file entry enables it. It supports the following logging levels: - ERROR -
@@ -61,8 +63,10 @@ public class Logger {
         // then log it
         if(minLevel != null && minLevel != "OFF" && levels.contains(level) && levels.indexOf(level) <= levels.indexOf(minLevel)){
             // if the level we're logging at is WARN or ERR, then log to STDERR, otherwise log to STDOUT
-            if(level == "WARN" || level == "ERR"){
-                System.err.println(getLogMsg(logPath, level, message));
+            if(level == "ERROR"){
+                DriverStation.reportError(getLogMsg(logPath, level, message), Thread.currentThread().getStackTrace());
+            }else if(level == "WARN"){
+                DriverStation.reportWarning(getLogMsg(logPath, level, message), Thread.currentThread().getStackTrace());
             }else{
                 System.out.println(getLogMsg(logPath, level, message));
             }

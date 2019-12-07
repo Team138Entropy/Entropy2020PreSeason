@@ -9,6 +9,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -60,6 +61,7 @@ public class Robot extends TimedRobot {
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
+    @Override
     public void robotInit() {
         Config.getInstance().reload();
         rotatorTalon.set(ControlMode.PercentOutput, 0f);
@@ -77,6 +79,17 @@ public class Robot extends TimedRobot {
         shuffHandler.init();
 
         DashboardThread.getInstance().start();
+
+        // prints an important message to the console after a delay
+        new java.util.Timer().schedule( 
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        DriverStation.reportError("\n\n=======================================================\nHEY YOU! Click the gear in the driver station and enable prints.\n=======================================================\n\n", false);
+                    }
+                }, 
+                1000 
+        );
     }
 
     /**
@@ -84,10 +97,12 @@ public class Robot extends TimedRobot {
      * You can use it to reset any subsystem information you want to clear when
      * the robot is disabled.
      */
+    @Override
     public void disabledInit() {
         Config.getInstance().reload();
     }
 
+    @Override
     public void disabledPeriodic() {
 
     }
@@ -101,6 +116,7 @@ public class Robot extends TimedRobot {
      * You can add additional auto modes by adding additional commands to the chooser code above (like the commented example)
      * or additional comparisons to the switch structure below with additional strings & commands.
      */
+    @Override
     public void autonomousInit() {
         Config.getInstance().reload();
         robotLogger.log("AUTONOMOUS INIT");
@@ -109,10 +125,12 @@ public class Robot extends TimedRobot {
     /**
      * This function is called periodically during autonomous
      */
+    @Override
     public void autonomousPeriodic() {
         teleopPeriodic();
     }
 
+    @Override
     public void teleopInit() {
         Config.getInstance().reload();
 
@@ -134,6 +152,7 @@ public class Robot extends TimedRobot {
     /**
      * This function is called periodically during operator control
      */
+    @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
 //		LiveWindow.run();Scheduler.getInstance().run();
@@ -185,6 +204,7 @@ public class Robot extends TimedRobot {
     /**
      * This function is called periodically during test mode
      */
+    @Override
     public void testPeriodic() {
         //      LiveWindow.run();
     }
