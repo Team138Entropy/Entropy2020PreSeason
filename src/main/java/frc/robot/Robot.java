@@ -30,9 +30,10 @@ import frc.robot.subsystems.*;
  * directory .
  */
 public class Robot extends TimedRobot {
-	// Interface with players
     public static final ShuffleboardTab main = Shuffleboard.getTab("SmartDashboard");
     public static final ShuffleboardHandler shuffHandler = new ShuffleboardHandler();
+    static Potentiometer pot = new AnalogPotentiometer(0, 360, 0);
+    public static final PotPID potHandler = new PotPID(pot);
 
     // Subsystems
     private static final Compressor compressor = new Compressor();
@@ -56,8 +57,6 @@ public class Robot extends TimedRobot {
     
     public static WPI_TalonSRX rotatorTalon = new WPI_TalonSRX(1);
 
-    Potentiometer pot;
-
     // Global constants
     private static String mode; // "auto" or "teleop"
     public static String gameData;
@@ -78,7 +77,7 @@ public class Robot extends TimedRobot {
         compressor.start();
         // map the values on a scale of 0-360 (was 0-1)
         // the final value is the "offset", which is added to each result
-        pot = new AnalogPotentiometer(0, 360, 0);
+    
         Robot.accumulatedHeading = 0;
         //TODO: why is this commented out???
         // Constants.practiceBot = isPracticeRobot();
@@ -108,6 +107,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         Config.getInstance().reload();
+        potHandler.disable();
     }
 
     @Override
@@ -141,6 +141,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         Config.getInstance().reload();
+        potHandler.enable();
 
         robotLogger.log("TELEOP INIT");
 
@@ -163,6 +164,14 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+
+        float potMin = Config.getInstance().getFloat(Key.OI__VISION__POT__MIN);
+        float potMax = Config.getInstance().getFloat(Key.OI__VISION__POT__MAX);
+        float edgeAvoidance = Config.getInstance().getFloat(Key.OI__VISION__POT__EDGE_AVOIDANCE);
+
+        boolean allowMovement = pot.get() + edgeAvoidance < potMax && pot.get() - edgeAvoidance > potMin;
+        potLogger.info("allow movement " + allowMovement);
+
 //		LiveWindow.run();Scheduler.getInstance().run();
         if(Config.getInstance().getBoolean(Key.OI__VISION__ENABLED)){
             oi.forward.cancel();
@@ -181,20 +190,28 @@ public class Robot extends TimedRobot {
                 // thisYaw = thisYaw - initialYaw;
                 //70 is the maximum, -70 is the minimum
 
+
                 //7 is our "deadband"
                 //TODO: add to config
                 if(Math.abs(thisYaw) > 7 && tapeDetected/* && Math.abs(previousYaw - thisYaw) < 7*/){
                     float direction = thisYaw < 0 ? 0.11f : -0.11f;
-                    Robot.rotatorTalon.set(ControlMode.PercentOutput, direction);
+                    // Robot.rotatorTalon.set(ControlMode.PercentOutput, direction);
                     visionLogger.debug(Float.toString(direction));
+                    potHandler.enable();
                     previousYaw = thisYaw;
         
+                    potHandler.setSetpoint((thisYaw + 70) / 140 * 360);
+
                     visionLogger.verbose("thisYaw " + thisYaw + " tapeDetected " + tapeDetected);
                 }else{
+                    potHandler.disable();
                     visionLogger.debug("Not getting any output " + Double.toString(thisYaw) + " " + tapeDetected);
                     Robot.rotatorTalon.set(ControlMode.PercentOutput, 0f);
                 }
             }
+            
+        }else{
+            visionLogger.debug("Not enabled");
         } 
     }
 
