@@ -65,8 +65,8 @@ public class Config{
 			try{
 				Config.getInstance().getString(key);
 			}catch(RuntimeException e){
-				DriverStation.reportError("Didn't find key " + key.name() + " in the configuration file. Did you forget to add it?", e.getStackTrace());
-				throw new Error("Didn't find key " + key.name() + " in the configuration file. Did you forget to add it?");
+				DriverStation.reportError("Didn't find key " + key.name() + " in the configuration file or default file. Did you forget to add it?", e.getStackTrace());
+				throw new Error("Didn't find key " + key.name() + " in the configuration file or default file. Did you forget to add it?");
 			}
         }
 	}
