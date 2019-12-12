@@ -8,11 +8,13 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import frc.robot.Config.Key;
 import frc.robot.events.EventWatcherThread;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -50,8 +52,11 @@ public class Robot extends TimedRobot {
     
     static Logger robotLogger = new Logger("robot");
     static Logger visionLogger = new Logger("vision");
+    static Logger potLogger = new Logger("pot");
     
     public static WPI_TalonSRX rotatorTalon = new WPI_TalonSRX(1);
+
+    Potentiometer pot;
 
     // Global constants
     private static String mode; // "auto" or "teleop"
@@ -66,11 +71,14 @@ public class Robot extends TimedRobot {
         Config.getInstance().reload();
         rotatorTalon.set(ControlMode.PercentOutput, 0f);
 
-
         robotLogger.log("ROBOT INIT");
+
         //VisionThread.getInstance().start();
     	// drivetrain.DriveTrainInit();
-    	compressor.start();	
+        compressor.start();
+        // map the values on a scale of 0-360 (was 0-1)
+        // the final value is the "offset", which is added to each result
+        pot = new AnalogPotentiometer(0, 360, 0);
         Robot.accumulatedHeading = 0;
         //TODO: why is this commented out???
         // Constants.practiceBot = isPracticeRobot();
@@ -127,7 +135,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
-        teleopPeriodic();
+        potLogger.debug("got pot value " + Double.toString(Math.round(pot.get() * 10) / 10.0));
     }
 
     @Override
