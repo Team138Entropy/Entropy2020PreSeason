@@ -29,7 +29,7 @@ public class Constants {
 	/* Controllers
 	The driver ports overlap so we don't have to change ports when changing control schemes.
 	There is an auto-detection mechanism that determines which control scheme to use
-	based on the reported HID type of the controller on port 0.
+	based on the reported device type of the controller on port 0.
 	*/
 	public static final int xboxControllerPort = 0;
 	public static final int leftFlightStickPort = 0;

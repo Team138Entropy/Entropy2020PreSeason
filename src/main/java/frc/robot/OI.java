@@ -135,12 +135,12 @@ public final class OI {
                 leftDriveStick = Optional.of(port0);
                 rightDriveStick = Optional.of(new Joystick(Constants.rightFlightStickPort));
                 break;
-            case kHIDGamepad:
+            case kXInputGamepad:
                 driveInterface = DriveInterface.CLASSIC;
                 driverStick = Optional.of(port0);
                 break;
             default:
-                throw new RuntimeException("Controller on port 0 did not report a supported HID type");
+                throw new RuntimeException("Controller on port 0 did not report a supported device type");
         }
     }
 
