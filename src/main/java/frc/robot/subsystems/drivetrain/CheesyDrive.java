@@ -1,4 +1,10 @@
-package frc.robot;
+package frc.robot.subsystems.drivetrain;
+
+import frc.robot.DriveSignal;
+import frc.robot.Logger;
+import frc.robot.OI;
+import frc.robot.Util;
+import frc.robot.Constants;
 
 /**
  * Helper class to implement "Cheesy Drive". "Cheesy Drive" simply means that the "turning" stick controls the curvature
@@ -6,7 +12,7 @@ package frc.robot;
  * speeds. Also handles the robot's quick turn functionality - "quick turn" overrides constant-curvature turning for
  * turn-in-place maneuvers.
  */
-public class CheesyDrive {
+public class CheesyDrive implements DriveEngine {
 
     // These constants help prevent accidental triggering
     /** @see #handleDeadband(double, double)*/
@@ -38,21 +44,20 @@ public class CheesyDrive {
     private double mQuickStopAccumulator = 0.0;
     private double mNegInertiaAccumlator = 0.0;
 
-    /**
-     * Here's the function that does all the work. There's a lot of math here.
-     * @param throttle
-     * @param wheel The raw Y-value from the joystick
-     * @param isQuickTurn {@code true} if we want to turn in place
-     * @param isHighGear
-     * @return
-     * @see <a href="https://www.desmos.com/calculator/hshfsz5we0">Math on Desmos</a>
-     */
+    public CheesyDrive() {
+        Logger logger = new Logger("CheesyDrive");
+        logger.info("Using CheesyDrive");
+    }
 
     public void setLowWheelNonLinearity(double set) {
         kLowWheelNonLinearity = set;
     }
 
-    public DriveSignal cheesyDrive(double throttle, double wheel, boolean isQuickTurn, boolean isHighGear) {
+    public DriveSignal drive() {
+        double throttle     = getMoveSpeed();
+        double wheel        = getRotateSpeed();
+        boolean isQuickTurn = isQuickturn();
+        boolean isHighGear  = isFullSpeed();
 
         wheel = handleDeadband(wheel, kWheelDeadband);
         throttle = handleDeadband(throttle, kThrottleDeadband);
@@ -179,6 +184,54 @@ public class CheesyDrive {
         }
 
         return retVal;
+    }
+
+    public double getMoveSpeed() {
+        if (OI.getInstance().getDriveInterface() != OI.DriveInterface.CLASSIC) throw new RuntimeException("CheesyDrive-specific method called while not using classic controls");
+
+		// joystick values are opposite to robot directions
+		double moveSpeed = OI.getInstance().driverStick.get().getRawAxis(OI.XboxController.leftYAxis);
+		// Apply thresholds to joystick positions to eliminate
+		// creep motion due to non-zero joystick value when joysticks are 
+		// "centered"
+		if (Math.abs(moveSpeed) < Constants.CloseLoopJoystickDeadband)
+			moveSpeed=0;
+		return moveSpeed;
+	}
+	
+	public double getRotateSpeed() {
+        if (OI.getInstance().getDriveInterface() != OI.DriveInterface.CLASSIC) throw new RuntimeException("CheesyDrive-specific method called while not using classic controls");
+
+        double rotateSpeed;
+        
+        if (Constants.practiceBot) {
+            rotateSpeed = OI.getInstance().driverStick.get().getRawAxis(OI.XboxController.rightXAxis);
+        }
+        else {
+            rotateSpeed = -1 * OI.getInstance().driverStick.get().getRawAxis(OI.XboxController.rightXAxis);
+        }
+        
+		if (Math.abs(rotateSpeed) < Constants.CloseLoopJoystickDeadband)
+			rotateSpeed=0;
+		return rotateSpeed;
+	}
+	
+	
+	
+	public boolean isFullSpeed() {
+        if (OI.getInstance().getDriveInterface() != OI.DriveInterface.CLASSIC) throw new RuntimeException("CheesyDrive-specific method called while not using classic controls");
+
+		// We don't use a freaking transmission, so just return false
+		return false;
+
+        // But if we did...
+        // return driverStick.getRawAxis(xboxRightTriggerAxis) > Constants.highSpeedModeTriggerThreshold;
+    }
+
+    public boolean isQuickturn() {
+        if (OI.getInstance().getDriveInterface() != OI.DriveInterface.CLASSIC) throw new RuntimeException("CheesyDrive-specific method called while not using classic controls");
+
+        return OI.getInstance().driverStick.get().getRawAxis(OI.XboxController.leftTriggerAxis) > Constants.highSpeedModeTriggerThreshold;
     }
 }
 

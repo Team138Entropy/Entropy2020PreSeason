@@ -1,16 +1,14 @@
 package frc.robot;
 
-import java.util.concurrent.CompletableFuture;
-
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.events.EventWatcherThread;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.drivetrain.StickDrive;
+import frc.robot.subsystems.drivetrain.CheesyDrive;
 
 /**
  * This is the development branch.
@@ -23,15 +21,12 @@ import frc.robot.subsystems.*;
 public class Robot extends TimedRobot {
 	// Interface with players
     public static final ShuffleboardTab main = Shuffleboard.getTab("SmartDashboard");
-    public static final ShuffleboardHandler shuffHandler = new ShuffleboardHandler();
 
     // Subsystems
-    private static final Compressor compressor = new Compressor();
     public static final Drivetrain drivetrain = new Drivetrain();
     //public static final DriverVision driverVision = new DriverVision();
 
     private static double accumulatedHeading = 0.0; // Accumulate heading angle (target)
-    public static final OI oi = new OI();
     Preferences prefs = Preferences.getInstance();
 
     
@@ -51,14 +46,20 @@ public class Robot extends TimedRobot {
 
         robotLogger.log("ROBOT INIT");
         //VisionThread.getInstance().start();
-    	drivetrain.DriveTrainInit();
-    	compressor.start();	
+        switch (OI.getInstance().getDriveInterface()) {
+            case CLASSIC:
+                drivetrain.setDriveEngine(new CheesyDrive());
+                break;
+            case STICK:
+                drivetrain.setDriveEngine(new StickDrive(OI.getInstance().leftDriveStick.get(), OI.getInstance().rightDriveStick.get()));
+                break;
+        }
+    	drivetrain.init();
         Robot.accumulatedHeading = 0;
         //TODO: why is this commented out???
         // Constants.practiceBot = isPracticeRobot();
 
         EventWatcherThread.getInstance().start();
-        shuffHandler.init();
 
         DashboardThread.getInstance().start();
     }
@@ -86,6 +87,7 @@ public class Robot extends TimedRobot {
      * or additional comparisons to the switch structure below with additional strings & commands.
      */
     public void autonomousInit() {
+        OI.autoDetectControllers();
         Config.getInstance().reload();
         robotLogger.log("AUTONOMOUS INIT");
     }
