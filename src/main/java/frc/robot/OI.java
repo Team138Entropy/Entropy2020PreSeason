@@ -129,22 +129,22 @@ public final class OI {
     public Optional<Joystick> driverStick = Optional.empty();
 
     // Nyko controller; this doesn't care about which driver control scheme we're using
-    public NykoController operatorStick = new NykoController(Constants.nykoControllerPort);
+    public NykoController operatorStick = new NykoController(Config.getInstance().getInt(Key.OI__CONTROL__NYKO_CONTROLLER_PORT));
 
     private OI() {
-        Joystick port0 = new Joystick(0);
+        Joystick port0 = new Joystick(Config.getInstance().getInt(Key.OI__CONTROL__AUTODETECTION_PORT));
         switch (port0.getType()) {
             case kHIDJoystick:
                 driveInterface = DriveInterface.STICK;
                 leftDriveStick = Optional.of(port0);
-                rightDriveStick = Optional.of(new Joystick(Constants.rightFlightStickPort));
+                rightDriveStick = Optional.of(new Joystick(Config.getInstance().getInt(Key.OI__CONTROL__RIGHT_FLIGHT_STICK_PORT)));
                 break;
             case kXInputGamepad:
                 driveInterface = DriveInterface.CLASSIC;
                 driverStick = Optional.of(port0);
                 break;
             default:
-                throw new RuntimeException("Controller on port 0 did not report a supported device type");
+                throw new RuntimeException("Controller on autodetection port did not report a supported device type");
         }
     }
 
