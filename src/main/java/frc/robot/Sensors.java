@@ -3,50 +3,50 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoMode.PixelFormat;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Sensors {
-	public static ADXRS450_Gyro gyro;
-	
-	// This is our encoder constant for distance (in METERS) per encoder pulse
-	// 6" Wheels, 15:45 chain drive; 256 encoder counts per drive sprocket rotation
-	final static double metersPerPulse = Math.PI*6*.0254*15/45/256;
+	public static ADXRS450_Gyro gyro; 
 	
     static Joystick driverStick = new Joystick(0);
 	
 	public static SensorCollection leftSensorCollection;
 	public static SensorCollection rightSensorCollection;
+	
+	public static double gyroBias=0;
 
 	public static DigitalInput practiceRobotJumperPin;
 
 	public static boolean isCargoDetectionEnabled = false;
+	private static boolean isCargoDetected = false;
+	private static boolean isOverCurrentDetected = false;
 	
 	static {
-		Robot.drivetrain.bottomLeftTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-		Robot.drivetrain.bottomRightTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		Robot.drivetrain.backLeftTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		Robot.drivetrain.backRightTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+
+        gyro = new ADXRS450_Gyro();
+        gyro.calibrate();
+        gyro.reset();
 	   
 		practiceRobotJumperPin = new DigitalInput(RobotMap.PRACTICE_ROBOT_JUMPER);
 	}
-
+	
 	public static double getLeftDistance() {
 		// In METERS
-		return -Robot.drivetrain.bottomLeftTalon.getSelectedSensorPosition(0) * metersPerPulse;
+		return -Robot.drivetrain.backLeftTalon.getSelectedSensorPosition(0) * Constants.MetersPerPulse;
 	}
 
 	public static double getRightDistance() {
 		// In METERS
-		return -Robot.drivetrain.bottomRightTalon.getSelectedSensorPosition(0) * metersPerPulse;
+		return -Robot.drivetrain.backRightTalon.getSelectedSensorPosition(0) * Constants.MetersPerPulse;
 	}
 
 	public static void resetEncoders() {
-		Robot.drivetrain.bottomLeftTalon.setSelectedSensorPosition(0, 0, 0);
-		Robot.drivetrain.bottomRightTalon.setSelectedSensorPosition(0, 0, 0);
+		Robot.drivetrain.backLeftTalon.setSelectedSensorPosition(0, 0, 0);
+		Robot.drivetrain.backRightTalon.setSelectedSensorPosition(0, 0, 0);
 	}
 
 	public static void updateSmartDashboard() {
@@ -63,17 +63,15 @@ public class Sensors {
 
 		double totalCurrent = 0;
 
-		totalCurrent += Robot.drivetrain.bottomLeftTalon.getOutputCurrent();
-		totalCurrent += Robot.drivetrain.bottomRightTalon.getOutputCurrent();
-		totalCurrent += Robot.drivetrain.topLeftTalon.getOutputCurrent();
-		totalCurrent += Robot.drivetrain.topRightTalon.getOutputCurrent();
+		totalCurrent += Robot.drivetrain.backLeftTalon.getOutputCurrent();
+		totalCurrent += Robot.drivetrain.backRightTalon.getOutputCurrent();
+		totalCurrent += Robot.drivetrain.frontLeftTalon.getOutputCurrent();
+		totalCurrent += Robot.drivetrain.frontRightTalon.getOutputCurrent();
 
 		SmartDashboard.putNumber("MOTOR Current", totalCurrent);
 	 }
-
 	 
-
-	public static boolean isPracticeBot() {
+	 public static boolean isPracticeBot() {
 		return !practiceRobotJumperPin.get();
 	}
 }

@@ -22,13 +22,7 @@ public class TeleopDrive extends Command {
 	}
 
 	protected void execute() {
-		double moveSpeed,rotateSpeed;
-		moveSpeed=OI.getMoveSpeed();
-		rotateSpeed=OI.getRotateSpeed();
-
-		teleopLogger.silly("moveSpeed " + moveSpeed + " rotateSpeed " + rotateSpeed + " OI.isQuickTurn() " + OI.isQuickturn() + " OI.isFullSpeed() " + OI.isFullSpeed());
-
-		Robot.drivetrain.drive(ourDrive.cheesyDrive(moveSpeed, rotateSpeed, OI.isQuickturn(), OI.isFullSpeed()));
+		Robot.drivetrain.drive();
 	}
 
 	protected boolean isFinished() {
