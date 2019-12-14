@@ -87,6 +87,7 @@ public class Robot extends TimedRobot {
      * or additional comparisons to the switch structure below with additional strings & commands.
      */
     public void autonomousInit() {
+        OI.autoDetectControllers();
         Config.getInstance().reload();
         robotLogger.log("AUTONOMOUS INIT");
     }

@@ -23,6 +23,10 @@ public final class OI {
         return instance;
     }
 
+    public static void autoDetectControllers() {
+        instance = new OI();
+    }
+
     public static enum DriveInterface {
         CLASSIC, STICK
     }
@@ -30,6 +34,7 @@ public final class OI {
     private DriveInterface driveInterface;
     public DriveInterface getDriveInterface() { return driveInterface; }
 
+    @SuppressWarnings("unused")
     public static class NykoController extends Joystick {
         // Buttons
         // These are package-private because we should only use them in OI to map them to commands
@@ -60,6 +65,7 @@ public final class OI {
 
     }
 
+    @SuppressWarnings("unused")
     public static class XboxController extends Joystick {
         // Buttons
         // These are package-private because we should only use them in OI to map them to commands
@@ -93,6 +99,7 @@ public final class OI {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class FlightStick extends Joystick {
         // Flight Stick-specific constants
         static final double deadband = 0.1;
