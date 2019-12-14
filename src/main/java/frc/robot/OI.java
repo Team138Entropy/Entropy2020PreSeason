@@ -59,7 +59,7 @@ public final class OI {
         static final int dPadUp = 12;
         static final int dPadDown = 13;
         static final int dPadLeft = 14;
-        static final int dPadRigt = 15;
+        static final int dPadRight = 15;
 
         // Axes
         static final int leftXAxis = 0;
