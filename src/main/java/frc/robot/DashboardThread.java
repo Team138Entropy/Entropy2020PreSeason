@@ -1,8 +1,7 @@
 package frc.robot;
 
-import static frc.robot.Robot.*;
-
-import frc.robot.Config.Key;
+import frc.robot.config.Config;
+import frc.robot.config.Config.Key;
 
 /**
  * Singleton thread for updating the SmartDashboard on an interval of {@value Constants#DASHBOARD_INTERVAL} milliseconds.

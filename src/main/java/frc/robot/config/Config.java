@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.config;
 /*
  * Constant values used throughout robot code.
  * In "C" this would be a header file, but alas, this is Java
@@ -82,6 +82,8 @@ public class Config{
 	public String getString(Key key){
 		return cfg.getString(key.name());
 	}
+
+	public String getRaw(String key) { return cfg.getString(key); }
 
 	public float getFloat(Key key){
 		return cfg.getFloat(key.name());

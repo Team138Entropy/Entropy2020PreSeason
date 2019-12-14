@@ -4,10 +4,8 @@ import java.util.Optional;
 
 import edu.wpi.first.wpilibj.Joystick;
 
-import frc.robot.events.EventWatcherThread;
-import frc.robot.Config.Key;
-import frc.robot.commands.*;
-import frc.robot.Constants;
+import frc.robot.config.Config;
+import frc.robot.config.Config.Key;
 
 /**
  * This class is the glue that binds the controls on the physical operator
