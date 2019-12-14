@@ -140,6 +140,7 @@ public final class OI {
 
     private OI() {
         Joystick port0 = new Joystick(Config.getInstance().getInt(Key.OI__CONTROL__AUTODETECTION_PORT));
+        System.out.println(port0.getType());
         switch (port0.getType()) {
             case kHIDJoystick:
                 driveInterface = DriveInterface.STICK;

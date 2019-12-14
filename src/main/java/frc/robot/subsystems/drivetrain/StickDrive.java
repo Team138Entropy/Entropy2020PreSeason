@@ -3,6 +3,7 @@ package frc.robot.subsystems.drivetrain;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.DriveSignal;
 import frc.robot.OI.FlightStick;
+import frc.robot.Logger;
 
 public class StickDrive implements DriveEngine {
     private Joystick leftStick, rightStick;
@@ -10,6 +11,9 @@ public class StickDrive implements DriveEngine {
     public StickDrive(Joystick leftStick, Joystick rightStick) {
         this.leftStick = leftStick;
         this.rightStick = rightStick;
+
+        Logger logger = new Logger("StickDrive");
+        logger.info("Using StickDrive");
     }
 
     public DriveSignal drive() {
