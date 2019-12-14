@@ -1,6 +1,7 @@
 package frc.robot.subsystems.drivetrain;
 
 import frc.robot.DriveSignal;
+import frc.robot.Logger;
 import frc.robot.OI;
 import frc.robot.Util;
 import frc.robot.Constants;
@@ -43,15 +44,10 @@ public class CheesyDrive implements DriveEngine {
     private double mQuickStopAccumulator = 0.0;
     private double mNegInertiaAccumlator = 0.0;
 
-    /**
-     * Here's the function that does all the work. There's a lot of math here.
-     * @param throttle
-     * @param wheel The raw Y-value from the joystick
-     * @param isQuickTurn {@code true} if we want to turn in place
-     * @param isHighGear
-     * @return
-     * @see <a href="https://www.desmos.com/calculator/hshfsz5we0">Math on Desmos</a>
-     */
+    public CheesyDrive() {
+        Logger logger = new Logger("CheesyDrive");
+        logger.info("Using CheesyDrive");
+    }
 
     public void setLowWheelNonLinearity(double set) {
         kLowWheelNonLinearity = set;
