@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 
 
@@ -15,8 +16,8 @@ import edu.wpi.first.wpilibj.Filesystem;
  * This class should only be instantiated once.
  */
 class ConfigFile {
-
-    Properties prop;
+    Properties props;
+    Properties defaultProps;
 
     /**
      * Reads the configuration file.
@@ -31,11 +32,23 @@ class ConfigFile {
      * It will run when the constructor is initalized (no need to manually run it the first time).
      */
     void reload(){
+        // load the config
         try (InputStream input = new FileInputStream(Filesystem.getDeployDirectory() + "/config.properties")){
-            prop = new Properties();
+            props = new Properties();
 
             // load the properties file
-            prop.load(input);
+            props.load(input);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        // load the default config
+        try (InputStream input = new FileInputStream(Filesystem.getDeployDirectory() + "/defaultconfig.properties")){
+            defaultProps = new Properties();
+
+            // load the properties file
+            defaultProps.load(input);
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -48,9 +61,15 @@ class ConfigFile {
      * @return The value of the property as a String.
      */
     String getProp(String key){
-        String value = prop.getProperty(key);
+        String value = props.getProperty(key);
         if(value == null){
-            throw new RuntimeException("Unknown key " + key);
+            value = defaultProps.getProperty(key);
+
+            if(value == null){
+                throw new RuntimeException("Did not find value in config file or in " + key);
+            }else{
+                DriverStation.reportError("\n\n======================================\nKEY " + key + " WAS NOT FOUND IN MAIN CONFIG BUT WAS FOUND IN DEFAULT FILE\nPlease add it to the file.\nYou might have unexpected issues.\n======================================\n\n", Thread.currentThread().getStackTrace());
+            }
         }
         return value;
     }
