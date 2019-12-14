@@ -170,14 +170,14 @@ public class Robot extends TimedRobot {
         float edgeAvoidance = Config.getInstance().getFloat(Key.OI__VISION__POT__EDGE_AVOIDANCE);
 
         boolean allowMovement = pot.get() + edgeAvoidance < potMax && pot.get() - edgeAvoidance > potMin;
-        potLogger.info("allow movement " + allowMovement);
+        potLogger.debug("allow movement " + allowMovement);
 
 //		LiveWindow.run();Scheduler.getInstance().run();
         if(Config.getInstance().getBoolean(Key.OI__VISION__ENABLED)){
             oi.forward.cancel();
             oi.backward.cancel();
             count ++;
-            if(count == 6){
+            if(count == 2){
                 count = 0;
 
                 boolean tapeDetected = table.getEntry("tapeDetected").getBoolean(false);
@@ -193,14 +193,13 @@ public class Robot extends TimedRobot {
 
                 //7 is our "deadband"
                 //TODO: add to config
-                if(Math.abs(thisYaw) > 7 && tapeDetected/* && Math.abs(previousYaw - thisYaw) < 7*/){
-                    float direction = thisYaw < 0 ? 0.11f : -0.11f;
-                    // Robot.rotatorTalon.set(ControlMode.PercentOutput, direction);
-                    visionLogger.debug(Float.toString(direction));
+                if(Math.abs(thisYaw) > 7 && tapeDetected){
                     potHandler.enable();
                     previousYaw = thisYaw;
         
-                    potHandler.setSetpoint((thisYaw + 70) / 140 * 360);
+                    double setPoint = (thisYaw + 80) / 160;
+                    potLogger.verbose("targeting set point " + Double.toString(setPoint));
+                    potHandler.setSetpoint(setPoint);
 
                     visionLogger.verbose("thisYaw " + thisYaw + " tapeDetected " + tapeDetected);
                 }else{
