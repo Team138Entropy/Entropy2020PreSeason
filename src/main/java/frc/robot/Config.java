@@ -51,7 +51,10 @@ public class Config{
 
 		OI__VISION__POT__MIN,
 		OI__VISION__POT__MAX,
-		OI__VISION__POT__EDGE_AVOIDANCE
+		OI__VISION__POT__EDGE_AVOIDANCE,
+		OI__VISION__PID__P,
+		OI__VISION__PID__I,
+		OI__VISION__PID__D
 	}
 
 	static Config instance;

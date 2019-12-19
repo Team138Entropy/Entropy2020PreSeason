@@ -32,7 +32,7 @@ import frc.robot.subsystems.*;
 public class Robot extends TimedRobot {
     public static final ShuffleboardTab main = Shuffleboard.getTab("SmartDashboard");
     public static final ShuffleboardHandler shuffHandler = new ShuffleboardHandler();
-    static Potentiometer pot = new AnalogPotentiometer(0, 360, 0);
+    static Potentiometer pot = new AnalogPotentiometer(0, 2.7027, 0);
     public static final PotPID potHandler = new PotPID(pot);
 
     // Subsystems
@@ -135,7 +135,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
-        potLogger.debug("got pot value " + Double.toString(Math.round(pot.get() * 10) / 10.0));
+        potLogger.debug("got pot value " + Double.toString(Math.round(pot.get() * 100) / 100.0));
     }
 
     @Override
@@ -169,15 +169,16 @@ public class Robot extends TimedRobot {
         float potMax = Config.getInstance().getFloat(Key.OI__VISION__POT__MAX);
         float edgeAvoidance = Config.getInstance().getFloat(Key.OI__VISION__POT__EDGE_AVOIDANCE);
 
-        boolean allowMovement = pot.get() + edgeAvoidance < potMax && pot.get() - edgeAvoidance > potMin;
+        boolean allowMovement = (pot.get() + edgeAvoidance < potMax && pot.get() - edgeAvoidance > potMin) || true;
         potLogger.debug("allow movement " + allowMovement);
 
-//		LiveWindow.run();Scheduler.getInstance().run();
         if(Config.getInstance().getBoolean(Key.OI__VISION__ENABLED)){
             oi.forward.cancel();
             oi.backward.cancel();
             count ++;
-            if(count == 2){
+
+
+            if(count == 20){
                 count = 0;
 
                 boolean tapeDetected = table.getEntry("tapeDetected").getBoolean(false);
@@ -193,12 +194,12 @@ public class Robot extends TimedRobot {
 
                 //7 is our "deadband"
                 //TODO: add to config
-                if(Math.abs(thisYaw) > 7 && tapeDetected){
+                if(Math.abs(thisYaw) > 10 && (thisYaw < -20 || thisYaw > 0) &&  tapeDetected){
                     potHandler.enable();
                     previousYaw = thisYaw;
         
                     double setPoint = (thisYaw + 80) / 160;
-                    potLogger.verbose("targeting set point " + Double.toString(setPoint));
+                    potLogger.verbose("targeting set point " + Double.toString(setPoint) + " from pot " + Robot.pot.get() + " at " + thisYaw);
                     potHandler.setSetpoint(setPoint);
 
                     visionLogger.verbose("thisYaw " + thisYaw + " tapeDetected " + tapeDetected);
@@ -211,6 +212,7 @@ public class Robot extends TimedRobot {
             
         }else{
             visionLogger.debug("Not enabled");
+            potHandler.setSetpoint(0.5);
         } 
     }
 
