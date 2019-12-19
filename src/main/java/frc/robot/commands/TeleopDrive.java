@@ -1,16 +1,11 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.CheesyDrive;
 import frc.robot.Logger;
-import frc.robot.OI;
 import frc.robot.Robot;
 
 public class TeleopDrive extends Command {
 	static Logger teleopLogger = new Logger("teleop");
-
-//           *happy stalin*
-	CheesyDrive ourDrive = new CheesyDrive();
 	
 	public TeleopDrive(){
 		requires(Robot.drivetrain);

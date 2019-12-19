@@ -1,9 +1,9 @@
 package frc.robot;
 
 import java.util.Arrays;
-import java.util.List;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.config.Config;
 
 /**
  * The Logger class lets you log messages and only have them show up if a config
@@ -61,7 +61,7 @@ public class Logger {
      * @param message The message to log
      */
     public void logLevel(SupportedLevels level, String message){
-        String minLevel = Config.getInstance().cfg.getString("LOG__" + logPath.toUpperCase());
+        String minLevel = Config.getInstance().getRaw("LOG__" + logPath.toUpperCase());
 
         // if logging is enabled at all for this logger,
         // and the level is recognized,
